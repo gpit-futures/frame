@@ -1,0 +1,8 @@
+<template bindable="clients">
+  <div class="dw-sidebar-header">
+
+  </div>
+  <sidebar-icon repeat.for="item of clients"
+    name="${item.name}" 
+    class="sidebar-icons ${$index === 0 ? 'is-active' : ''}"></sidebar-icon>
+</template>

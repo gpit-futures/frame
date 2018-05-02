@@ -1,0 +1,118 @@
+@import "../../node_modules/bulma/bulma.sass";
+
+$sidebar-bg: #353b48;
+$sidebar-header-height: 100px;
+
+$patient-banner-bg: #feca57;
+$patient-banner-deceased-bg: #b2bec3;
+$patient-banner-deceased-border: 3px dashed #2d3436;
+$patient-banner-height: $sidebar-header-height;
+
+$main-bg : #dcdde1;
+
+$info-bar-bg: #2e86de;
+
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+.dw {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  &-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &-info-bar {
+    display: flex;
+    flex-shrink: 0;
+    padding: 0.5em 0.75em;
+    color: white;
+    background-color: $info-bar-bg;
+  }
+
+  &-sidebar {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 200px;
+    overflow-y: auto;
+    background-color: $sidebar-bg;
+
+    .sidebar-icons {
+      padding: 0.75em;
+      color: white;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken($color: $sidebar-bg, $amount: 3);
+      }
+
+      &.is-active {
+        background-color: darken($color: $sidebar-bg, $amount: 5);
+      }
+    }
+
+    &-header {
+      height: $sidebar-header-height;
+      padding: 0.75em;
+      background-color: lighten($color: $sidebar-bg, $amount: 10);
+    }
+  }
+
+  &-sidebar-collapse {
+    width: 3px;
+    cursor: e-resize;
+  }
+
+  &-main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: $main-bg;
+  }
+
+  &-patient-banner {
+    // height: $patient-banner-height;
+    background: $patient-banner-bg;
+    padding: 1em;
+    margin: 0 !important;
+
+    &.is-deceased {
+      background-color: $patient-banner-deceased-bg;
+      border: $patient-banner-deceased-border;
+    }
+
+    &-supplement {
+      padding: 0.5em 1em;
+      margin: 0 !important;
+
+      > .column {
+        padding-right: 0.5rem !important;
+
+        &:last-of-type {
+          padding-right: 0 !important;
+        }
+      }
+    }
+  }
+
+  &-frames {
+    display: flex;
+    flex: 1;
+    overflow-y: auto;
+
+    .frames {
+      display: flex;
+      flex: 1;
+    }
+  }
+}
