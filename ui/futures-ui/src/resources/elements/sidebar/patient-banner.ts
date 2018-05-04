@@ -6,8 +6,7 @@ export class PatientBannerCustomElement {
     el.classList.add("dw-patient-banner", "columns", "is-gapless");
   }
 
-  @bindable name: string;
-  @bindable title: string;
+  @bindable patient;
   @bindable deceased: boolean = false;
 
   attached() {

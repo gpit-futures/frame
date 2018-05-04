@@ -1,10 +1,13 @@
 @import "../../node_modules/bulma/bulma.sass";
 
 $sidebar-bg: #353b48;
-$sidebar-header-height: 100px;
+$sidebar-width: 250px;
+$sidebar-header-height: 96px;
 
 $patient-banner-bg: #feca57;
 $patient-banner-deceased-bg: #b2bec3;
+$patient-banner-supplement-bg: white;
+$patient-banner-supplement-border: 1px solid #dcdde1;
 $patient-banner-deceased-border: 3px dashed #2d3436;
 $patient-banner-height: $sidebar-header-height;
 
@@ -15,6 +18,13 @@ $info-bar-bg: #2e86de;
 html {
   height: 100%;
   overflow: hidden;
+  background-color: $main-bg;
+}
+
+.has-text-truncated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dw {
@@ -22,6 +32,13 @@ html {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+
+  router-view {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
 
   &-container {
     display: flex;
@@ -41,7 +58,7 @@ html {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    width: 200px;
+    width: $sidebar-width;
     overflow-y: auto;
     background-color: $sidebar-bg;
 
@@ -77,7 +94,6 @@ html {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: $main-bg;
   }
 
   &-patient-banner {
@@ -89,17 +105,32 @@ html {
     &.is-deceased {
       background-color: $patient-banner-deceased-bg;
       border: $patient-banner-deceased-border;
+      border-bottom: none;
     }
 
     &-supplement {
       padding: 0.5em 1em;
       margin: 0 !important;
+      cursor: pointer;
+      background-color: $patient-banner-supplement-bg;
+      border-bottom: $patient-banner-supplement-border;
+      
+      &.is-deceased {
+        border: $patient-banner-deceased-border;
+        border-top: none;
+      }
 
       > .column {
-        padding-right: 0.5rem !important;
+        padding: 0 0.75em;
+        border-right: $patient-banner-supplement-border;
+
+        &:first-of-type {
+          padding-left: 0;
+        }
 
         &:last-of-type {
-          padding-right: 0 !important;
+          padding-right: 0;
+          border-right: none;
         }
       }
     }

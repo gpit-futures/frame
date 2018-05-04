@@ -1,8 +1,9 @@
-<template bindable="clients">
+<template>
   <div class="dw-sidebar-header">
 
   </div>
-  <sidebar-icon repeat.for="item of clients"
-    name="${item.name}" 
-    class="sidebar-icons ${$index === 0 ? 'is-active' : ''}"></sidebar-icon>
+  <sidebar-icon repeat.for="client of clients"
+    client.bind="client" 
+    click.delegate="select(client.id)"
+    class="sidebar-icons ${selected === client.id ? 'is-active' : ''}"></sidebar-icon>
 </template>

@@ -1,14 +1,5 @@
 <template>
   <require from="./scss/global.scss"></require>
 
-  <div class="dw-container">
-    <sidebar class="dw-sidebar" clients.bind="clients"></sidebar>
-    <div class="dw-main">
-      <patient-banner name="SMITH, Peter" title="Mr"></patient-banner>
-      <patient-banner-supplement class="dw-patient-banner-supplement columns is-gapless"></patient-banner-supplement>
-      <frames class="dw-frames" clients.bind="clients"></frames>
-    </div>
-  </div>
-  <info-bar practitioner-name="Dr. John Smith" 
-    class="dw-info-bar columns is-gapless"></info-bar>
+  <router-view></router-view>
 </template>

@@ -1,5 +1,7 @@
-<template bindable="clients">
+<template>
     <iframe repeat.for="client of clients" class="frames" 
-      src="https://www.gov.uk/"
+      show.bind="selected === client.id"
+      id="${client.id}"
+      src="${client.sourceUrl}"
       frameborder="0"></iframe>
 </template>
