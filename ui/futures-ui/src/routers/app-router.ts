@@ -10,11 +10,18 @@ export class AppRouter {
     config.title = "GP IT";
     config.map([
       {
-        route: ["", "home"], name: "home", moduleId: PLATFORM.moduleName("pages/home/home-layout")
+        route: "", redirect: "login"
+      },
+      {
+        route: "home/:user", name: "home", moduleId: PLATFORM.moduleName("pages/home/home-layout")
       },
       {
         route: "login", name: "login", moduleId: PLATFORM.moduleName("pages/login/login-layout"), title: "Login"
       }
     ]);
+  }
+
+  navigateToHome(user: string) {
+    this.router.navigateToRoute("home", { user: user });
   }
 }

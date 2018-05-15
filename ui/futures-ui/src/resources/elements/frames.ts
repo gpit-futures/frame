@@ -1,11 +1,11 @@
-import { bindable, observable } from "aurelia-framework";
+import { autoinject, bindable, observable } from "aurelia-framework";
 
-import { Catalogue } from "../../../fake-app-catalogue";
-
+@autoinject
 export class FramesCustomElement {
-  
+  constructor(private el: Element) { }
+
   @bindable selected: string;
-  @bindable clients: Catalogue.IClientMetadata[];
+  @bindable clients: any[];
 
   clientsChanged() {
     if (!this.clients || this.clients.length === 0) {

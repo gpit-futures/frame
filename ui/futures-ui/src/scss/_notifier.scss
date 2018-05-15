@@ -1,0 +1,25 @@
+.notifier-container {
+  z-index: 999;
+  position: fixed;
+  bottom: 1em;
+  left: 1em;
+  width: 400px;
+  max-width: 98%;
+}
+
+.notifier {
+  position: relative;
+  box-shadow: 0 1px 10px 0 rgba(0,0,0,.1), 0 2px 15px 0 rgba(0,0,0,.05);
+  opacity: 0;
+  transform: translateX(-140%);
+  transition: all .6s cubic-bezier(0.5, -0.5, 0.3, 1.4), opacity .6s ease;
+
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  &.shown {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

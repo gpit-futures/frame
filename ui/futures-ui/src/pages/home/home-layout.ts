@@ -1,49 +1,78 @@
-import { observable } from "aurelia-framework";
+import { autoinject, computedFrom, observable } from "aurelia-framework";
+
+import { ClientStateManager, Dispatcher, IEvent, createEventDispatcher } from "../../utilities/bootstrapper";
+import { Notifier, NotifierType } from "../../utilities/notifier";
 
 import { Catalogue } from "../../fake-app-catalogue";
+import { Users } from "../../fake-user-list";
 
+@autoinject
 export class HomeLayout {
+  constructor(private notifier: Notifier, private clientManager: ClientStateManager) { }
+
+  private userId: string;
+  private user: Users.IUser;
+  
   selected: string;
 
   @observable clients: Catalogue.IClientMetadata[] = [];
   @observable patientContext: boolean;
+  @observable patient;
 
-  patient = {
-    "id": "267e175a-57fe-4b8a-a672-15012d83ed9e",
-    "title": "Mr",
-    "firstName": "Ivor",
-    "lastName": "Cox",
-    "gender": "Male",
-    "phone": "(011981) 32362",
-    "pasNumber": "352541",
-    "nhsNumber": "9999999000",
-    "dateOfBirth": "1944-07-05T23:00:00Z",
-    "address": {
-      "line1": "6948 Et St.",
-      "line2": "Halesowen",
-      "line3": "Worcestershire",
-      "line4": null,
-      "postcode": "VX27 5DV"
-    },
-    "gp": {
-      "name": "Goff Carolyn D.",
-      "address": {
-        "line1": "Hamilton Practice",
-        "line2": "5544 Ante Street",
-        "line3": "Hamilton",
-        "line4": "Lanarkshire",
-        "postcode": "N06 5LP"
-      }
+  @computedFrom("user")
+  get practitionerName(): string {
+    if (!this.user) {
+      return "";
     }
-  };
+
+    return `${this.user.title} ${this.user.firstName} ${this.user.lastName}`;
+  }
+
+  activate(params) {
+    this.userId = params.user;
+  }
 
   async attached() {
-    this.clients = await Catalogue.getClients();
+    const dispatcher = createEventDispatcher();
+    this.createEventListener(dispatcher);
+    
+    this.clients = await Catalogue.getClients(this.userId);
+    this.user = await Users.getUser(this.userId);
+    
+    if (this.clients.length > 0) {
+      this.clientManager.set(this.clients);
+      this.selected = this.clients[0].id;
+    }
+  }
 
-    this.selected = this.clients[0].id;
+  private createEventListener(dispatcher: Dispatcher) {
+    window.addEventListener("message", (message: MessageEvent) => {
+      const event = message.data as IEvent;
 
-    window.setTimeout(() => {
-      this.patientContext = !this.patientContext;
-    }, 4000);
+      if (event.name === "client-connector:client:loaded") {
+        const client = this.clientManager.register(event.data.origin, message.ports[0]);
+        const clientId = client.id;
+        
+        message.ports[0].onmessage = (e: MessageEvent) => {
+          dispatcher(clientId, e.data.name, e.data.data, this.clientManager);
+          this.processFrameworkEvent(e.data.name, e.data.data);
+        };
+
+        return;
+      }
+    });
+  }
+
+  private processFrameworkEvent(eventName: string, data: any) {
+    switch(eventName) {
+      case "patient-context:changed":
+        this.patient = data;
+        this.patientContext = true;
+        break;
+      case "patient-context:ended":
+        this.patientContext = false;
+        this.patient = null;
+        break;
+    }
   }
 }
