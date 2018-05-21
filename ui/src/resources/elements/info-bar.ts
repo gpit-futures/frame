@@ -8,6 +8,7 @@ export class InfoBarCustomElement {
   
   @observable time: Date = new Date();
   @bindable practitionerName: string;
+  @bindable logoutAction: Function;
 
   attached() {
     this.timeInterval = window.setInterval(() => {
@@ -17,5 +18,13 @@ export class InfoBarCustomElement {
 
   detached() {
     window.clearInterval(this.timeInterval);
+  }
+
+  logout() {
+    if (!this.logoutAction) {
+      return;
+    }
+
+    this.logoutAction();
   }
 }

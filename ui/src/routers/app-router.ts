@@ -24,4 +24,8 @@ export class AppRouter {
   navigateToHome(user: string) {
     this.router.navigateToRoute("home", { user: user });
   }
+
+  navigateToLogin() {
+    this.router.navigateToRoute("login");
+  }
 }

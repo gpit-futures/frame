@@ -1,5 +1,6 @@
 import { autoinject, computedFrom, observable } from "aurelia-framework";
 
+import { AppRouter } from "../../routers/app-router";
 import { ClientStateManager, Dispatcher, IEvent, createEventDispatcher } from "../../utilities/bootstrapper";
 import { Notifier, NotifierType } from "../../utilities/notifier";
 
@@ -8,7 +9,10 @@ import { Users } from "../../fake-user-list";
 
 @autoinject
 export class HomeLayout {
-  constructor(private notifier: Notifier, private clientManager: ClientStateManager) { }
+  constructor(
+    private router: AppRouter, 
+    private notifier: Notifier, 
+    private clientManager: ClientStateManager) { }
 
   private userId: string;
   private user: Users.IUser;
@@ -26,6 +30,15 @@ export class HomeLayout {
     }
 
     return `${this.user.title} ${this.user.firstName} ${this.user.lastName}`;
+  }
+
+  @computedFrom("user")
+  get logout(): Function {
+    return () => {
+      this.clients = [];
+      this.user = undefined;
+      this.router.navigateToLogin();
+    };
   }
 
   activate(params) {
