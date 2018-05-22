@@ -6,7 +6,7 @@
           <label class="label">Username</label>
           <div class="control">
             <!-- <input type="text" class="input" placeholder="Username"> -->
-            <div class="select is-fullwidth">
+            <div class="select is-fullwidth ${loadingUsers ? 'is-loading' : ''}">
               <select value.bind="username">
                 <option value="">Select user</option>
                 <option repeat.for="user of loginUsers" value.bind="user.id">${user.username}</option>

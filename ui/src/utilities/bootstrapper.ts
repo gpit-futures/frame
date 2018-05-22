@@ -1,4 +1,4 @@
-import { Catalogue } from "../fake-app-catalogue";
+import { IClientMetadata } from "../services/catalogue-service";
 
 export interface IEvent {
   name: string;
@@ -8,7 +8,7 @@ export interface IEvent {
 export interface IClient {
   id: string;
   name: string;
-  metadata: Catalogue.IClientMetadata;
+  metadata: IClientMetadata;
   registered: boolean;
   port: MessagePort;
 }
@@ -18,7 +18,7 @@ export interface IClient {
       return this.clients;
   }
 
-  set(clients: Catalogue.IClientMetadata[]) {
+  set(clients: IClientMetadata[]) {
       this.clients =
           clients.map(x => {
               return {

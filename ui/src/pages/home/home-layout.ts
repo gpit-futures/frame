@@ -4,22 +4,24 @@ import { AppRouter } from "../../routers/app-router";
 import { ClientStateManager, Dispatcher, IEvent, createEventDispatcher } from "../../utilities/bootstrapper";
 import { Notifier, NotifierType } from "../../utilities/notifier";
 
-import { Catalogue } from "../../fake-app-catalogue";
-import { Users } from "../../fake-user-list";
+import { CatalogueService, IClientMetadata } from "../../services/catalogue-service";
+import { UserService, IUser } from "../../services/user-service";
 
 @autoinject
 export class HomeLayout {
   constructor(
     private router: AppRouter, 
+    private catalogue: CatalogueService,
+    private users: UserService,
     private notifier: Notifier, 
     private clientManager: ClientStateManager) { }
 
   private userId: string;
-  private user: Users.IUser;
+  private user: IUser;
   
   selected: string;
 
-  @observable clients: Catalogue.IClientMetadata[] = [];
+  @observable clients: IClientMetadata[] = [];
   @observable patientContext: boolean;
   @observable patient;
 
@@ -49,8 +51,8 @@ export class HomeLayout {
     const dispatcher = createEventDispatcher();
     this.createEventListener(dispatcher);
     
-    this.clients = await Catalogue.getClients(this.userId);
-    this.user = await Users.getUser(this.userId);
+    this.clients = await this.catalogue.getClients(this.userId);
+    this.user = await this.users.getUser(this.userId);
     
     if (this.clients.length > 0) {
       this.clientManager.set(this.clients);

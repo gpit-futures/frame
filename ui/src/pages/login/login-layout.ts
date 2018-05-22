@@ -3,13 +3,17 @@ import { autoinject, bindable, observable } from "aurelia-framework";
 import { AppRouter } from "../../routers/app-router";
 import { Notifier, NotifierType } from "../../utilities/notifier";
 
-import { Users } from "../../fake-user-list";
+import { UserService, IUser } from "../../services/user-service";
 
 @autoinject
 export class LoginLayout {
-  constructor(private router: AppRouter, private notifier: Notifier) { }
+  constructor(
+    private router: AppRouter, 
+    private users: UserService,
+    private notifier: Notifier) { }
 
-  @observable loginUsers: Users.IUser[] = [];
+  @observable loginUsers: IUser[] = [];
+  @observable loadingUsers: boolean = true;
 
   @bindable username: string;
   @bindable password: string;
@@ -19,7 +23,9 @@ export class LoginLayout {
   }
 
   async attached() {
-    this.loginUsers = await Users.getUsers();
+    this.loadingUsers = true;
+    this.loginUsers = await this.users.getUsers();
+    this.loadingUsers = false;
   }
 
   login() {
