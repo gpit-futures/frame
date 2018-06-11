@@ -1,0 +1,208 @@
+@import "../../node_modules/bulma/css/bulma.css";
+@import "./_notifier.scss";
+
+.hide-webview{ width: 0px; height: 0px; flex: 0 1!important; }
+.header-space{ height: 5px; background-color: darkviolet}
+.column {
+  padding: 0rem;
+}
+
+#title-bar {
+  -webkit-app-region: drag;
+  background-color: darkviolet;
+  padding: 5px;
+  margin: 0px; 
+ }
+ 
+ #title {
+  position: fixed;
+  top: 0px;
+  left: 6px; 
+ }
+
+ #title-bar-btns .divider {
+  color: #2d3436
+ }
+ 
+ #title-bar-btns button {
+  -webkit-app-region: no-drag;
+  top: 0px;
+  right: 6px;
+  background: transparent;
+  border: 0;
+  width:30px;
+  height: 30px;
+  color: #2d3436
+ }
+
+ #title-bar-btns button:hover {
+  background: #fff;
+  border-radius: 5px;
+
+ }
+
+ .logout {
+  -webkit-app-region: no-drag;
+ }
+
+
+$sidebar-bg: #353b48;
+$sidebar-width: 250px;
+$sidebar-header-height: 96px;
+
+$patient-banner-bg: #feca57;
+$patient-banner-deceased-bg: #b2bec3;
+$patient-banner-supplement-bg: white;
+$patient-banner-supplement-border: 1px solid #dcdde1;
+$patient-banner-deceased-border: 3px dashed #2d3436;
+$patient-banner-height: $sidebar-header-height;
+
+$main-bg : #dcdde1;
+
+$info-bar-bg: #2e86de;
+
+html {
+  height: 100vh;
+  overflow: hidden;
+  background-color: $main-bg;
+}
+
+.has-text-truncated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dw {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+
+  .router-view {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &-info-bar {
+    display: flex;
+    flex-shrink: 0;
+    padding: 0.5em 0.75em;
+    color: white;
+    background-color: $info-bar-bg;
+  }
+
+  &-sidebar {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: $sidebar-width;
+    overflow-y: auto;
+    background-color: $sidebar-bg;
+
+    .sidebar-icons {
+      padding: 0.75em;
+      color: white;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken($color: $sidebar-bg, $amount: 3);
+      }
+
+      &.is-active {
+        background-color: darken($color: $sidebar-bg, $amount: 5);
+      }
+    }
+
+    &-header {
+      height: $sidebar-header-height;
+      padding: 0.75em;
+      background-color: lighten($color: $sidebar-bg, $amount: 10);
+    }
+  }
+
+  &-sidebar-collapse {
+    width: 3px;
+    cursor: e-resize;
+  }
+
+  &-main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  &-patient-banner {
+    // height: $patient-banner-height;
+    background: $patient-banner-bg;
+    padding: 1em;
+    margin: 0 !important;
+
+    &.is-deceased {
+      background-color: $patient-banner-deceased-bg;
+      border: $patient-banner-deceased-border;
+      border-bottom: none;
+    }
+
+    &-supplement {
+      padding: 0.5em 1em;
+      margin: 0 !important;
+      cursor: pointer;
+      background-color: $patient-banner-supplement-bg;
+      border-bottom: $patient-banner-supplement-border;
+      
+      &.is-deceased {
+        border: $patient-banner-deceased-border;
+        border-top: none;
+      }
+
+      > .column {
+        padding: 0 0.75em;
+        border-right: $patient-banner-supplement-border;
+
+        &:first-of-type {
+          padding-left: 0;
+        }
+
+        &:last-of-type {
+          padding-right: 0;
+          border-right: none;
+        }
+      }
+    }
+  }
+
+  &-frames {
+    display: flex;
+    flex: 1;
+    overflow-y: auto;
+
+    .frames {
+      display: flex;
+      flex: 1;
+    }
+  }
+
+  &-login-container {
+    height: 100%;
+
+    > .column {
+      display: flex;
+      align-items: center;
+
+      > .box {
+        width: 100%;
+      }
+    }
+  }
+}
