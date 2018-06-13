@@ -3,7 +3,6 @@
 // in preload scripts, we have access to node.js and electron APIs
 // the remote web app will not, so this is safe
 const { ipcRenderer: ipc, remote } = require('electron');
-
 init();
 
 function init() {
@@ -22,11 +21,13 @@ function init() {
 }
 
 function attachIPCListeners() {
-  // we get this message from the main process, and then tell the todo app to make it so
-  // the todo app defines this function
   ipc.on('patient-context:changed', (event, patient) => {
     console.log('patient context changed triggered' + patient)
     window.Bridge.updatePatientContext(patient);
+  });
+  ipc.on('token-context:changed', (event, token) => {
+    console.log('token context changed triggered' + token)
+    window.Bridge.updateTokenContext(token);
   });
 }
 

@@ -38,7 +38,9 @@ export function setupListeners(webviews) {
                 triggerPatientContextEvent(event.channel, event.args[0])
             }
         });
+        modules[module][0].addEventListener('did-stop-loading', triggerTokenContextEvent)
     }
+    modules.InrLocal[0].openDevTools();
 }
 
 // sends patient context change event to subscribed clients
@@ -51,6 +53,8 @@ function triggerPatientContextEvent(eventChannel, patient) {
 
     let interestedClient
     for (interestedClient in interestedClients) {
+        // modules.Core[0].openDevTools();
+        // modules.INR[0].openDevTools();
         // modules.InrLocal[0].openDevTools();
         // modules.CoreLocal[0].openDevTools();
         modules[interestedClients[interestedClient].applicationName][0].send('patient-context:changed', patient);
@@ -62,6 +66,15 @@ function getInterestedClients(event) {
     return store.state.clients.filter(client =>
         client.eventsOfInterest.filter(x => x === event).length > 0
     );
+}
+
+// send token to frames on login.
+function triggerTokenContextEvent() {
+    let module;
+    for (module in modules) {
+        console.log(store.state.token)
+        modules[module][0].send('token-context:changed', store.state.token);
+    }
 }
 
 // send to thick client

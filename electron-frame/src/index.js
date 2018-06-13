@@ -71,20 +71,25 @@ app.on('activate', () => {
 
 // launch rabbitMQ on app launch
 launchRabbitMQ();
+
 function launchRabbitMQ() {
   return new Promise((resolve, reject) => {
-    // const { spawn } = require('child_process');
     var spawn = require('cross-spawn');
-    const ls = spawn('docker-compose', ['up'],
-      { cwd: '../rabbitmq' });
+    const ls = spawn('docker-compose', ['up'], {
+      cwd: 'src/rabbitmq'
+    });
+
+    ls.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+
+    ls.stderr.on('data', (data) => {
+      console.log(`stderr: ${data}`);
+    });
+
+    ls.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
+
   })
 }
-
-
-// var context = require('rabbit.js').createContext('amqp://localhost:5672');
-
-// // publish to rabbit - figure this out later.
-// var pub = context.socket('PUSH', {routing: 'direct', persistent: true});
-// pub.connect('patient-context-changed-queue', function() {
-//   pub.write(JSON.stringify({welcome: 'rabbit.js'}), 'utf8');
-// })

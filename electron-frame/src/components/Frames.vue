@@ -27,7 +27,7 @@ export default {
     },
     clients() {
       return this.$store.state.clients;
-    }
+    },
   },
   mounted() {
     setTimeout(() => {

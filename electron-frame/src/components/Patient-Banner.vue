@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="dw-patient-banner">
   <div class="column columns is-gapless">
     <div class="column has-text-weight-bold is-three-fifths">
       <span class="is-uppercase">{{patient.name[0].family}}</span>, {{patient.name[0].given[0]}} ({{patient.name[0].prefix[0]}})

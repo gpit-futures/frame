@@ -28,36 +28,95 @@
 </template>
 
 <script>
-import { UserService } from '../services/user-service'
+import { UserService } from "../services/user-service";
 import { Notifier, NotifierType } from "../utilities/notifier";
-import mutators from '../store/mutators'
+import mutators from "../store/mutators";
+import axios from "axios";
 
 export default {
-  name: 'login',
-  components: { },
-  data () {
-    return { // Some mock data to fill the page
+  name: "login",
+  components: {},
+  data() {
+    return {
+      // Some mock data to fill the page
       loginUsers: [],
-      password: '',
-      userName: '',
+      password: "",
+      userName: "",
       user: {},
       loadingUsers: true,
       notifier: new Notifier()
-    }
-  }, 
+    };
+  },
   methods: {
-    login() {
-      console.log('test: ' + this.user)
-      this.notifier.show("Success", "Successfully logged in", NotifierType.Success, 3000);
-      this.$store.commit(mutators.SET_USER, this.user)
-      this.$router.push({name: 'Home', params: {user: this.user}})
+    async login() {
+      console.log(this.token);
+      this.$store.commit(
+        mutators.SET_TOKEN,
+        await this.obtainAccessToken(this.user.username, this.password)
+      );
+      console.log(this.token);
+
+      if (this.token == null) {
+        this.notifier.show(
+          "Warning",
+          "Login failed",
+          NotifierType.Warning,
+          3000
+        );
+      } else {
+        this.notifier.show(
+          "Success",
+          "Successfully logged in",
+          NotifierType.Success,
+          3000
+        );
+        this.$store.commit(mutators.SET_USER, this.user);
+        this.$router.push({ name: "Home", params: { user: this.user } });
+      }
+    },
+    async obtainAccessToken(username, password) {
+      let json;
+      const params = new URLSearchParams();
+      params.append("username", username);
+      params.append("password", password);
+      params.append("client_id", "fooClientIdPassword");
+      params.append("client_secret", "fred");
+      params.append("grant_type", "password");
+      console.log(username + " " + password);
+
+      await axios
+        .post(
+          "http://ec2-18-130-14-227.eu-west-2.compute.amazonaws.com/oauth/token",
+          params,
+          {
+            headers: {
+              "Content-type":
+                "application/x-www-form-urlencoded; charset=utf-8",
+              Authorization: "Basic " + btoa("fooClientIdPassword::fred")
+            }
+          }
+        )
+        .then(res => {
+          console.log(res);
+          json = res.data;
+        })
+        .catch(error => {
+          console.error(error);
+          json = null;
+        });
+      return json;
     }
   },
-  async mounted () {
+  computed: {
+    token() {
+      return this.$store.state.token;
+    }
+  },
+  async mounted() {
     let userService = new UserService();
     this.loginUsers = await userService.getUsers();
     this.loadingUsers = false;
-    console.log(this.loginUsers)
+    console.log(this.loginUsers);
   }
-}
+};
 </script>

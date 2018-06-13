@@ -13,6 +13,7 @@ export default new Vuex.Store({
         selected: null,
         selectedTitle: null,
         clients: null,
+        token: null
 
     },
     mutations: {
@@ -39,6 +40,11 @@ export default new Vuex.Store({
         [mutators.SET_SELECTED_MODULE_TITLE](state, selectedTitle) {
             if (!null) {
                 state.selectedTitle = selectedTitle
+            }
+        },
+        [mutators.SET_TOKEN](state, token) {
+            if (!null) {
+                state.token = token
             }
         },
         [mutators.SET_CLIENTS](state, clients) {
