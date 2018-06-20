@@ -11,18 +11,27 @@ let modules;
 let clients;
 let testVar;
 let context;
-let sub;
+let patientContextSub;
+let patientEndedSub;
 let pub;
 
 start();
 // setup connection to rabbitMQ server - and listen for 'patient-context:changed' events
 function start() {
     context = require('rabbit.js').createContext('amqp://localhost:5672');
-    sub = context.socket('SUBSCRIBE', { routing: 'direct', persistent: true });
-    sub.connect('patient.exchange', 'patient.context.changed');
-    sub.setEncoding('utf8');
-    sub.on('data', function (data) {
+    patientContextSub = context.socket('SUBSCRIBE', { routing: 'direct', persistent: true });
+    patientContextSub.connect('patient.exchange', 'patient.context.changed');
+    patientContextSub.setEncoding('utf8');
+    patientContextSub.on('data', function (data) {
         triggerPatientContextEvent('patient-context:changed', JSON.parse(data))
+        console.log("Data: ", data);
+    })
+
+    patientEndedSub = context.socket('SUBSCRIBE', { routing: 'direct', persistent: true });
+    patientEndedSub.connect('patient.exchange', 'patient.context.ended');
+    patientEndedSub.setEncoding('utf8');
+    patientEndedSub.on('data', function (data) {
+        triggerPatientContextEvent('patient-context:ended', null)
         console.log("Data: ", data);
     })
 }
@@ -34,30 +43,32 @@ export function setupListeners(webviews) {
     for (module in modules) {
         console.log(modules[module])
         modules[module][0].addEventListener("ipc-message", event => {
-            if (event.channel == 'patient-context:changed') {
-                triggerPatientContextEvent(event.channel, event.args[0])
-            }
+            triggerPatientContextEvent(event.channel, event.args[0])
+            // if (event.channel == 'patient-context:changed') {
+            //     triggerPatientContextEvent(event.channel, event.args[0])
+            // }
         });
         modules[module][0].addEventListener('did-stop-loading', triggerTokenContextEvent)
     }
-    modules.InrLocal[0].openDevTools();
+    // modules.Core[0].openDevTools();
+    // modules.INR[0].openDevTools();
+    // modules.InrLocal[0].openDevTools();
+    // modules.CoreLocal[0].openDevTools();
 }
 
 // sends patient context change event to subscribed clients
 function triggerPatientContextEvent(eventChannel, patient) {
     console.log(patient);
     store.commit(mutators.SET_PATIENT, patient)
-    store.commit(mutators.SET_PATIENT_CONTEXT, true)
+    store.commit(mutators.SET_PATIENT_CONTEXT, patient == null ? false:true)
+
+    sendToThickClient(eventChannel, patient)
 
     let interestedClients = getInterestedClients(eventChannel)
 
     let interestedClient
     for (interestedClient in interestedClients) {
-        // modules.Core[0].openDevTools();
-        // modules.INR[0].openDevTools();
-        // modules.InrLocal[0].openDevTools();
-        // modules.CoreLocal[0].openDevTools();
-        modules[interestedClients[interestedClient].applicationName][0].send('patient-context:changed', patient);
+        modules[interestedClients[interestedClient].applicationName][0].send(eventChannel, patient);
     }
 }
 
@@ -78,9 +89,11 @@ function triggerTokenContextEvent() {
 }
 
 // send to thick client
-function sendToThickClient() {
+function sendToThickClient(eventChannel, patient) {
     pub = context.socket('PUSH', { routing: 'direct', persistent: true });
-    pub.connect('patient-context-changed-queue', function () {
+
+    pub.connect(eventChannel.endsWith('ended') ? 'patient-context-ended-queue' : 'patient-context-changed-queue', function () {
+        console.log("writeing to queue")
         pub.write(JSON.stringify(patient), 'utf8');
     })
 }

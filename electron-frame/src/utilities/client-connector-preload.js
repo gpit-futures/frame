@@ -25,6 +25,10 @@ function attachIPCListeners() {
     console.log('patient context changed triggered' + patient)
     window.Bridge.updatePatientContext(patient);
   });
+  ipc.on('patient-context:ended', (event, patient) => {
+    console.log('patient context ended triggered' + patient)
+    window.Bridge.endPatientContext(patient);
+  });
   ipc.on('token-context:changed', (event, token) => {
     console.log('token context changed triggered' + token)
     window.Bridge.updateTokenContext(token);

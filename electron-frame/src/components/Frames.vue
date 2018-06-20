@@ -33,6 +33,7 @@ export default {
     setTimeout(() => {
       let webviews = this.$refs;
       setupListeners(webviews);
+      // this.clientManager.setupListeners(webviews);
     }, 1000);
   }
 };

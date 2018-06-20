@@ -49,32 +49,32 @@ export default new Vuex.Store({
         },
         [mutators.SET_CLIENTS](state, clients) {
 
-            let localCore = {  
-                "id":"168be560-ab86-4020-a41e-a30e51dbbab2",
-                "applicationName":"CoreLocal",
-                "publisher":"Core GP Sys",
-                "sourceUrl":"http://localhost:3101/#/",
-                "eventsOfInterest":[  
-                ]
-             }
-             let localInr = {  
-                "id":"168be560-ab86-4020-a41e-a30e51dbbab7",
-                "applicationName":"InrLocal",
-                "publisher":"Core GP Sys",
-                "sourceUrl":"http://localhost:3102/#/",
-                "eventsOfInterest":[  
-                    "patient-context:changed",
-                    "patient-context:ended"
-                ]
-             }
+            // let localCore = {  
+            //     "id":"168be560-ab86-4020-a41e-a30e51dbbab2",
+            //     "applicationName":"CoreLocal",
+            //     "publisher":"Core GP Sys",
+            //     "sourceUrl":"http://localhost:3101/#/",
+            //     "eventsOfInterest":[  
+            //     ]
+            //  }
+            //  let localInr = {  
+            //     "id":"168be560-ab86-4020-a41e-a30e51dbbab7",
+            //     "applicationName":"InrLocal",
+            //     "publisher":"Core GP Sys",
+            //     "sourceUrl":"http://localhost:3102/#/",
+            //     "eventsOfInterest":[  
+            //         "patient-context:changed",
+            //         "patient-context:ended"
+            //     ]
+            //  }
              
 
             if (clients == null) {
                 state.clients = clients
             } else {
                 state.clients = clients
-                state.clients.push(localCore)
-                state.clients.push(localInr)
+                // state.clients.push(localCore)
+                // state.clients.push(localInr)
             }
         },
         [mutators.LOGOUT](state) {
