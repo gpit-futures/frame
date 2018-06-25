@@ -1,5 +1,5 @@
 <template>
-<div class="dw-patient-banner">
+<!-- <div class="dw-patient-banner dw-patient-banner-layout">
   <div class="column columns is-gapless">
     <div class="column has-text-weight-bold is-three-fifths">
       <span class="is-uppercase">{{patient.name[0].family}}</span>, {{patient.name[0].given[0]}} ({{patient.name[0].prefix[0]}})
@@ -14,6 +14,30 @@
       NHS No. <span class="has-text-weight-bold">{{patient.identifier[0].value | nhsNumberFormat}}</span>
     </div>
   </div>
+</div> -->
+<div>
+    <v-layout row>
+      <v-flex xs3>
+        <v-card dark tile flat xs2 class="amber darken-3">
+          <v-card-text><span class="is-uppercase">{{patient.name[0].family}}</span>, {{patient.name[0].given[0]}} ({{patient.name[0].prefix[0]}})</v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex xs3>
+        <v-card dark tile flat xs2 class="amber darken-3">
+          <v-card-text>Born: <span class="has-text-weight-bold">{{patient.birthDate | dateTimeFormat}} {{patient.birthDate | ageToday}}</span></v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex xs3>
+        <v-card dark tile flat xs2 class="amber darken-3">
+          <v-card-text>Gender: <span class="has-text-weight-bold">{{patient.gender}}</span></v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex xs3>
+        <v-card dark tile flat xs2 class="amber darken-3">
+          <v-card-text>NHS No: <span class="has-text-weight-bold">{{patient.identifier[0].value | nhsNumberFormat}}</span></v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
 </div>
 </template>
 
@@ -67,3 +91,4 @@ export default {
   }
 };
 </script>
+

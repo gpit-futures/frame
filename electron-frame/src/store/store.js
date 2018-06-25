@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import mutators from './mutators'
-import router from '../router'
 
 Vue.use(Vuex)
 
@@ -12,8 +11,11 @@ export default new Vuex.Store({
         patientContext: false,
         selected: null,
         selectedTitle: null,
-        clients: null,
-        token: null
+        clients: [],
+        token: null,
+        showDrawer: false,
+        showNotifications: false,
+        showDashboard: true
 
     },
     mutations: {
@@ -47,34 +49,48 @@ export default new Vuex.Store({
                 state.token = token
             }
         },
+        [mutators.SET_SHOW_DRAWER](state, showDrawer) {
+            if (!null) {
+                state.showDrawer = showDrawer
+            }
+        },
+        [mutators.SET_SHOW_NOTIFICATIONS](state, showNotifications) {
+            if (!null) {
+                state.showNotifications = showNotifications
+            }
+        },
+        [mutators.SET_SHOW_DASHBOARD](state, showDashboard) {
+            if (!null) {
+                state.showDashboard = showDashboard
+            }
+        },
         [mutators.SET_CLIENTS](state, clients) {
 
-            // let localCore = {  
-            //     "id":"168be560-ab86-4020-a41e-a30e51dbbab2",
-            //     "applicationName":"CoreLocal",
-            //     "publisher":"Core GP Sys",
-            //     "sourceUrl":"http://localhost:3101/#/",
-            //     "eventsOfInterest":[  
-            //     ]
-            //  }
-            //  let localInr = {  
-            //     "id":"168be560-ab86-4020-a41e-a30e51dbbab7",
-            //     "applicationName":"InrLocal",
-            //     "publisher":"Core GP Sys",
-            //     "sourceUrl":"http://localhost:3102/#/",
-            //     "eventsOfInterest":[  
-            //         "patient-context:changed",
-            //         "patient-context:ended"
-            //     ]
-            //  }
+            let localCore = {  
+                "id":"168be560-ab86-4020-a41e-a30e51dbbab2",
+                "applicationName":"CoreLocal",
+                "publisher":"Core GP Sys",
+                "sourceUrl":"http://localhost:3101/#/",
+                "eventsOfInterest":[  
+                ]
+             }
+             let localInr = {  
+                "id":"168be560-ab86-4020-a41e-a30e51dbbab7",
+                "applicationName":"InrLocal",
+                "publisher":"Core GP Sys",
+                "sourceUrl":"http://localhost:3102/#/",
+                "eventsOfInterest":[  
+                    "patient-context:changed",
+                    "patient-context:ended"
+                ]
+             }
              
 
             if (clients == null) {
-                state.clients = clients
+                state.clients = []
             } else {
                 state.clients = clients
-                // state.clients.push(localCore)
-                // state.clients.push(localInr)
+                state.clients.push(localCore)
             }
         },
         [mutators.LOGOUT](state) {
@@ -83,7 +99,8 @@ export default new Vuex.Store({
             state.patientContext = false,
             state.selected = null,
             state.selectedTitle = null,
-            state.clients = null
+            state.clients = [],
+            state.showDashboard = true
         },
     },
     getters: {

@@ -4,33 +4,44 @@
       class="blue darken-3" dark
       temporary
       absolute
+      right
       app
       :value="showDrawer"
       @input="menuClosed"
     >
-      <v-toolbar flat class="blue darken-4">
+      <v-toolbar flat class="blue darken-4" dark>
         <v-list>
           <v-list-tile>
             <v-list-tile-title class="title white--text">
-              Modules:
+              Notifications:
             </v-list-tile-title>
           </v-list-tile>
         </v-list>
       </v-toolbar>
       <v-list dense>
-        <template v-for="client of clients">
-          <v-list-tile :key="client.id" @click="select(client)" v-bind:class="{'is-hidden': client.id === '168be560-ab86-4020-a41e-a30e51dbbab2'}">
+        <template v-for="client of clients" v-bind:class="{'is-active': selected === client.id}">
+          <v-list-tile :key="client.id" @click="select(client)">
             <v-list-tile-action>
-              <v-icon>apps</v-icon>
+              <v-icon>event_available</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
-                {{ client.applicationName }}
+                Appointment Notification
               </v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </template>
       </v-list>
+      <v-dialog v-model="dialog" max-width="290">
+            <v-card>
+              <v-card-title class="headline"><v-icon>event_available</v-icon>Appointment Notification</v-card-title>
+              <v-card-text>A new appointment for patient(Carol Griffith, 999 999 9049) has been created.</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green darken-1" flat="flat" @click.native="dialog = false">close</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
     </v-navigation-drawer>
 </template>
 
@@ -44,6 +55,7 @@ export default {
   components: { SidebarIcon },
   data () {
     return { // Some mock data to fill the page
+    dialog: false
     }
   },
   computed: {
@@ -54,20 +66,18 @@ export default {
       return this.$store.state.clients
     },
     showDrawer() {
-      return this.$store.state.showDrawer
+      return this.$store.state.showNotifications
     }
   },
   methods: {
     select (client) {
       console.log(this.selected)
-      this.$store.commit(mutators.SET_SHOW_DRAWER, false);
-      this.$store.commit(mutators.SET_SHOW_DASHBOARD, false)
-      this.$store.commit(mutators.SET_SELECTED_MODULE, client.id)
-      this.$store.commit(mutators.SET_SELECTED_MODULE_TITLE, client.applicationName)
+      this.dialog = true
+      this.$store.commit(mutators.SET_SHOW_NOTIFICATIONS, false);
     },
     menuClosed(state){
       console.log("State: " + state)
-        this.$store.commit(mutators.SET_SHOW_DRAWER, state);
+        this.$store.commit(mutators.SET_SHOW_NOTIFICATIONS, state);
     },
   }
 }

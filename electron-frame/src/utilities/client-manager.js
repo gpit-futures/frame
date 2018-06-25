@@ -6,6 +6,7 @@ import Vuex from 'vuex'
 import mutators from '../store/mutators';
 import store from '../store/store';
 import { init } from 'electron-compile';
+import { Notifier, NotifierType } from "../utilities/notifier";
 
 let modules;
 let clients;
@@ -14,10 +15,13 @@ let context;
 let patientContextSub;
 let patientEndedSub;
 let pub;
+let notifier;
 
 start();
 // setup connection to rabbitMQ server - and listen for 'patient-context:changed' events
 function start() {
+    notifier = new Notifier()
+
     context = require('rabbit.js').createContext('amqp://localhost:5672');
     patientContextSub = context.socket('SUBSCRIBE', { routing: 'direct', persistent: true });
     patientContextSub.connect('patient.exchange', 'patient.context.changed');
@@ -43,10 +47,16 @@ export function setupListeners(webviews) {
     for (module in modules) {
         console.log(modules[module])
         modules[module][0].addEventListener("ipc-message", event => {
-            triggerPatientContextEvent(event.channel, event.args[0])
-            // if (event.channel == 'patient-context:changed') {
-            //     triggerPatientContextEvent(event.channel, event.args[0])
-            // }
+            if (event.channel == 'warning-message:sent') {
+                notifier.show(
+                    "Danger",
+                    event.args[0],
+                    NotifierType.Danger,
+                    8000
+                  );
+            } else (
+                triggerPatientContextEvent(event.channel, event.args[0])
+            )
         });
         modules[module][0].addEventListener('did-stop-loading', triggerTokenContextEvent)
     }

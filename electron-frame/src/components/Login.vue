@@ -1,30 +1,40 @@
 <template>
-  <div class="dw-login-container columns is-tablet is-centered">
-    <div class="column is-one-third-tablet is-narrow">
-      <div class="box">
-        <div class="field">
-          <label class="label">Username</label>
-          <div class="control">
-            <div class="select is-fullwidth"  v-bind:class="{'is-loading': loadingUsers}">
-              <select v-model="user">
-                <option value="">Select user</option>
-                <option v-for="user in loginUsers" :key="user.id" v-bind:value="user">{{user.username}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Password</label>
-          <div class="control">
-            <input type="password" class="input" v-model="password" placeholder="Password">
-          </div>
-        </div>
-        <div class="control">
-          <button class="button is-success is-fullwidth" @click="login()">Login</button>
-        </div>
-      </div>
-    </div>
-  </div>
+<v-content>
+      <v-container fluid fill-height>
+        <v-layout flex align-center justify-center>
+          <v-flex xs2 sm2 align-content-center>
+            <v-card color="white" class="black--text" d-flex>
+              <v-card-title primary-title>
+                <div style="width:100%;">
+                  <h3 class="headline mb-0">Welcome</h3>
+                  <div>Enter your credentials below to log in</div>
+                <form>
+                <v-select
+                  v-model="user"
+                  :items="loginUsers"
+                  item-text="username"
+                  label="Username"
+                  color:="white"
+                  attach
+                  required
+                ></v-select>
+                <v-text-field
+                  v-model="password"
+                  :type="'password'"
+                  label="Password"
+                  required
+                ></v-text-field>
+                </form>
+                </div>
+              </v-card-title>
+              <v-card-actions>
+                <v-btn flat color="orange" @click="login()">Login</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-content>
 </template>
 
 <script>
@@ -40,6 +50,7 @@ export default {
     return {
       // Some mock data to fill the page
       loginUsers: [],
+      test:["test","test","test"],
       password: "",
       userName: "",
       user: {},
@@ -71,7 +82,9 @@ export default {
           3000
         );
         this.$store.commit(mutators.SET_USER, this.user);
+        this.$store.commit(mutators.SET_SHOW_DRAWER, true);
         this.$router.push({ name: "Home", params: { user: this.user } });
+        // this.$router.push({ name: "Dashboard", params: { user: this.user } });
       }
     },
     async obtainAccessToken(username, password) {

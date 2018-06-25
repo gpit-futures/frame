@@ -16,7 +16,8 @@ function init() {
   // !CAREFUL! do not expose any functionality or APIs that could compromise the
   // user's computer. E.g. don't directly expose core Electron (even IPC) or node.js modules.
   window.Bridge = {
-    setPatientContext
+    setPatientContext,
+    sendWarningToFrame
   };
 }
 
@@ -43,5 +44,10 @@ function setPatientContext(message) {
   } else {
     ipc.sendToHost('patient-context:changed', message)
   }
+}
+
+// send warning
+function sendWarningToFrame(message) {
+  ipc.sendToHost('warning-message:sent', message)
 }
 

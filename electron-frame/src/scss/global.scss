@@ -1,50 +1,37 @@
-@import "../../node_modules/bulma/css/bulma.css";
 @import "./_notifier.scss";
 
-.hide-webview{ width: 0px; height: 0px; flex: 0 1!important; }
-.header-space{ height: 5px; background-color: darkviolet}
-.column {
-  padding: 0rem;
+
+.is-uppercase {
+  text-transform: uppercase;
+}
+.has-text-weight-bold {
+  font-weight: bolder;
 }
 
-#title-bar {
+.menu__content {
+	background: #ffffff;
+}
+
+.hide-webview{ width: 0px; height: 0px; flex: 0 1!important; }
+// .header-space{ height: 5px; background-color: #2e86de}
+// .dw-patient-banner .column {
+//   padding: 0rem;
+// }
+
+.toolbar {
   -webkit-app-region: drag;
-  background-color: darkviolet;
-  padding: 5px;
-  margin: 0px; 
- }
- 
- #title {
-  position: fixed;
-  top: 0px;
-  left: 6px; 
  }
 
- #title-bar-btns .divider {
-  color: #2d3436
- }
- 
- #title-bar-btns button {
-  -webkit-app-region: no-drag;
-  top: 0px;
-  right: 6px;
-  background: transparent;
-  border: 0;
-  width:30px;
-  height: 30px;
-  color: #2d3436
- }
-
- #title-bar-btns button:hover {
-  background: #fff;
-  border-radius: 5px;
-
- }
-
- .logout {
+.toolbar .noDrag{
   -webkit-app-region: no-drag;
  }
+ .dw-patient-banner {
+   max-height: 85px;
+ }
 
+ .is-hidden {
+  display:none;
+}
 
 $sidebar-bg: #353b48;
 $sidebar-width: 250px;
@@ -63,7 +50,7 @@ $info-bar-bg: #2e86de;
 
 html {
   height: 100vh;
-  overflow: hidden;
+  overflow: hidden!important;
   background-color: $main-bg;
 }
 
@@ -120,6 +107,10 @@ html {
       &.is-active {
         background-color: darken($color: $sidebar-bg, $amount: 5);
       }
+
+      &.is-hidden {
+        display:none;
+      }
     }
 
     &-header {
@@ -166,7 +157,7 @@ html {
         border-top: none;
       }
 
-      > .column {
+      > .dw-patient-banner .column {
         padding: 0 0.75em;
         border-right: $patient-banner-supplement-border;
 
@@ -196,7 +187,7 @@ html {
   &-login-container {
     height: 100%;
 
-    > .column {
+    > .dw-patient-banner .column {
       display: flex;
       align-items: center;
 
