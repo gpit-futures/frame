@@ -68,28 +68,3 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-
-// launch rabbitMQ on app launch
-launchRabbitMQ();
-
-function launchRabbitMQ() {
-  return new Promise((resolve, reject) => {
-    var spawn = require('cross-spawn');
-    const ls = spawn('docker-compose', ['up'], {
-      cwd: 'src/rabbitmq'
-    });
-
-    ls.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-
-    ls.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-    });
-
-    ls.on('close', (code) => {
-      console.log(`child process exited with code ${code}`);
-    });
-
-  })
-}

@@ -117,6 +117,7 @@ export default {
     },
     home() {
       this.$store.commit(mutators.SET_SHOW_DASHBOARD, true);
+      this.$store.commit(mutators.SET_SELECTED_MODULE_TITLE, "Home")
     }
   },
   computed: {

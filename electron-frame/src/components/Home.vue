@@ -80,8 +80,7 @@ export default {
       this.clientManager = this.clients;
       this.$store.commit(mutators.SET_SELECTED_MODULE, this.clients[0].id);
       this.$store.commit(
-        mutators.SET_SELECTED_MODULE_TITLE,
-        this.clients[0].applicationName
+        mutators.SET_SELECTED_MODULE_TITLE, "Home"
       );
     }
   }

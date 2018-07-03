@@ -91,6 +91,7 @@ export default new Vuex.Store({
             } else {
                 state.clients = clients
                 state.clients.push(localCore)
+                // state.clients.push(localInr)
             }
         },
         [mutators.LOGOUT](state) {

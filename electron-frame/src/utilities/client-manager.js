@@ -7,6 +7,7 @@ import mutators from '../store/mutators';
 import store from '../store/store';
 import { init } from 'electron-compile';
 import { Notifier, NotifierType } from "../utilities/notifier";
+import WebSocket from 'ws';
 
 let modules;
 let clients;
@@ -16,28 +17,33 @@ let patientContextSub;
 let patientEndedSub;
 let pub;
 let notifier;
+let wss;
 
 start();
-// setup connection to rabbitMQ server - and listen for 'patient-context:changed' events
-function start() {
+// setup connection - and listen for 'patient-context:changed' events
+function start() {   
     notifier = new Notifier()
-
     context = require('rabbit.js').createContext('amqp://localhost:5672');
-    patientContextSub = context.socket('SUBSCRIBE', { routing: 'direct', persistent: true });
-    patientContextSub.connect('patient.exchange', 'patient.context.changed');
-    patientContextSub.setEncoding('utf8');
-    patientContextSub.on('data', function (data) {
-        triggerPatientContextEvent('patient-context:changed', JSON.parse(data))
-        console.log("Data: ", data);
-    })
-
-    patientEndedSub = context.socket('SUBSCRIBE', { routing: 'direct', persistent: true });
-    patientEndedSub.connect('patient.exchange', 'patient.context.ended');
-    patientEndedSub.setEncoding('utf8');
-    patientEndedSub.on('data', function (data) {
-        triggerPatientContextEvent('patient-context:ended', null)
-        console.log("Data: ", data);
-    })
+    // WEB SOCKETS
+    wss = new WebSocket.Server( { port: 1040 } )
+    wss.on('connection', function (w) { 
+         
+        w.on( 'message' , function (data)  {
+            console.log(data)
+            let message = JSON.parse(data);
+            console.log("Event: ", message.event);
+            console.log("Event: ", message.data);
+            if(message.event == "patient-context:changed") {
+                triggerPatientContextEvent('patient-context:changed', message.data)
+            } else {
+                triggerPatientContextEvent('patient-context:ended', null)
+            }
+        })  
+        w.on('close', function() { 
+             console.log("Closed") 
+        })    
+        w.send("patient-context:changed - received")
+    }) 
 }
 
 // adds an event listener to each webview and decodes/routes the event when triggered
@@ -49,15 +55,16 @@ export function setupListeners(webviews) {
         modules[module][0].addEventListener("ipc-message", event => {
             if (event.channel == 'warning-message:sent') {
                 notifier.show(
-                    "Danger",
+                    "Warning",
                     event.args[0],
-                    NotifierType.Danger,
+                    NotifierType.Warning,
                     8000
                   );
             } else (
                 triggerPatientContextEvent(event.channel, event.args[0])
             )
         });
+        modules[module][0].reloadIgnoringCache()
         modules[module][0].addEventListener('did-stop-loading', triggerTokenContextEvent)
     }
     // modules.Core[0].openDevTools();
@@ -100,10 +107,14 @@ function triggerTokenContextEvent() {
 
 // send to thick client
 function sendToThickClient(eventChannel, patient) {
-    pub = context.socket('PUSH', { routing: 'direct', persistent: true });
-
-    pub.connect(eventChannel.endsWith('ended') ? 'patient-context-ended-queue' : 'patient-context-changed-queue', function () {
-        console.log("writeing to queue")
-        pub.write(JSON.stringify(patient), 'utf8');
-    })
+    console.log("testing socket")
+    wss.broadcast = function broadcast(data) {
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN) {
+              console.log("sending to thick client")
+            client.send(data);
+          }
+        });
+      };
+      wss.broadcast(JSON.stringify(patient), 'utf8');
 }

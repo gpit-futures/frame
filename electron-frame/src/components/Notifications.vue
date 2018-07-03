@@ -32,10 +32,11 @@
           </v-list-tile>
         </template>
       </v-list>
-      <v-dialog v-model="dialog" max-width="290">
+      <v-dialog v-model="dialog" max-width="350">
             <v-card>
-              <v-card-title class="headline"><v-icon>event_available</v-icon>Appointment Notification</v-card-title>
-              <v-card-text>A new appointment for patient(Carol Griffith, 999 999 9049) has been created.</v-card-text>
+              <v-card-title class="headline"><v-icon>event_available</v-icon>Appointment</v-card-title>
+              <v-card-text><span class="has-text-weight-bold">created: </span>03-Aug-2018</v-card-text>
+              <v-card-text>A new appointment for patient<span class="has-text-weight-bold">(Carol Griffith, 999 999 9049)</span> has been created.</v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="green darken-1" flat="flat" @click.native="dialog = false">close</v-btn>
