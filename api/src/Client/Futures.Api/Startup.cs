@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RawRabbit;
+using RawRabbit.Attributes;
+using RawRabbit.Common;
+using RawRabbit.vNext;
 
 namespace Futures.Api
 {
@@ -18,9 +22,10 @@ namespace Futures.Api
 
         private IContainer _applicationContainer;
 
+        private IBusClient _bus;
+
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddCors(config => config.AddPolicy("CorsPolicy", x =>
@@ -33,11 +38,16 @@ namespace Futures.Api
             services.AddMvc();
             services.AddSignalR();
 
+            services.AddRawRabbit(config => config.AddJsonFile("rabbitmq.json"), ioc =>
+            {
+                ioc.AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>();
+            });
+
             this._applicationContainer = Bootstrapper.SetupContainer(services);
+            this._bus = Bootstrapper.SetupMessageSubscriptions(services, this._applicationContainer);
             return new AutofacServiceProvider(this._applicationContainer);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
@@ -54,6 +64,7 @@ namespace Futures.Api
 
             lifetime.ApplicationStopped.Register(() =>
             {
+                this._bus.ShutdownAsync();
                 this._applicationContainer.Dispose();
             });
         }

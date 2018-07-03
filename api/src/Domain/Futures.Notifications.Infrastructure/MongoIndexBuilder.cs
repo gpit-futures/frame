@@ -7,7 +7,7 @@ namespace Futures.Notifications.Infrastructure
     {
         public async Task Start()
         {
-            
+
         }
     }
 }

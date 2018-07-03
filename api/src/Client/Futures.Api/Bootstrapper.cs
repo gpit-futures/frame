@@ -1,6 +1,11 @@
-﻿using Autofac;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using RawRabbit;
+using RawRabbit.vNext;
 
 namespace Futures.Api
 {
@@ -8,12 +13,28 @@ namespace Futures.Api
     {
         public static IContainer SetupContainer(IServiceCollection services)
         {
-            var container = new ContainerBuilder();
+            var containerBuilder = new ContainerBuilder();
 
-            Bootstrapper.RegisterModules(container);
+            Bootstrapper.RegisterModules(containerBuilder);
 
-            container.Populate(services);
-            return container.Build();
+            containerBuilder.Populate(services);
+            var container = containerBuilder.Build();
+
+            // Run all startup tasks
+            var tasks = container.Resolve<IEnumerable<Futures.Infrastructure.DependencyInjection.IStartupTask>>();
+            Task.WaitAll(tasks.Select(t => t.Start()).ToArray());
+
+            return container;
+        }
+
+        public static IBusClient SetupMessageSubscriptions(IServiceCollection services, IContainer container)
+        {
+            var bus = BusClientFactory.CreateDefault(services);
+
+            var task = container.Resolve<Futures.Infrastructure.MessageQueue.IMessageSubscription>();
+            Task.WaitAll(task.Start(bus, container));
+
+            return bus;
         }
 
         private static void RegisterModules(ContainerBuilder builder)

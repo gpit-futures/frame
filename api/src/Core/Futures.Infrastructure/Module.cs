@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Futures.Infrastructure.DependencyInjection;
+using Futures.Infrastructure.MessageQueue;
 using Futures.Infrastructure.Mongo;
 
 namespace Futures.Infrastructure
@@ -10,6 +11,8 @@ namespace Futures.Infrastructure
         {
             builder.RegisterType<MongoConnectionFactory>().As<IMongoConnectionFactory>();
             builder.RegisterType<MongoDatabaseFactory>().As<IMongoDatabaseFactory>();
+
+            builder.RegisterType<MessageSubscription>().As<IMessageSubscription>();
         }
     }
 }
