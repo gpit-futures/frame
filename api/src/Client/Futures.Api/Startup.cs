@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization.Formatters;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Futures.Api.Hubs;
@@ -6,6 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using RawRabbit;
 using RawRabbit.Attributes;
 using RawRabbit.Common;
@@ -41,6 +44,20 @@ namespace Futures.Api
             services.AddRawRabbit(config => config.AddJsonFile("rabbitmq.json"), ioc =>
             {
                 ioc.AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>();
+                //ioc.AddTransient(c => new JsonSerializer
+                //{
+                //    TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                //    Formatting = Formatting.None,
+                //    CheckAdditionalContent = true,
+                //    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                //    ObjectCreationHandling = ObjectCreationHandling.Auto,
+                //    DefaultValueHandling = DefaultValueHandling.Ignore,
+                //    TypeNameHandling = TypeNameHandling.None,
+                //    ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                //    MissingMemberHandling = MissingMemberHandling.Ignore,
+                //    PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                //    NullValueHandling = NullValueHandling.Ignore
+                //});
             });
 
             this._applicationContainer = Bootstrapper.SetupContainer(services);

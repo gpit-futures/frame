@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Futures.Infrastructure.MessageQueue;
 using Microsoft.Extensions.DependencyInjection;
 using RawRabbit;
 using RawRabbit.vNext;
@@ -31,8 +32,8 @@ namespace Futures.Api
         {
             var bus = BusClientFactory.CreateDefault(services);
 
-            var task = container.Resolve<Futures.Infrastructure.MessageQueue.IMessageSubscription>();
-            Task.WaitAll(task.Start(bus, container));
+            var task = container.Resolve<IMessageSubscription>();
+            task.Start(bus, container);
 
             return bus;
         }
@@ -40,6 +41,7 @@ namespace Futures.Api
         private static void RegisterModules(ContainerBuilder builder)
         {
             builder.RegisterModule<Futures.Infrastructure.Module>();
+            builder.RegisterModule<Futures.Notifications.Infrastructure.Module>();
         }
     }
 }

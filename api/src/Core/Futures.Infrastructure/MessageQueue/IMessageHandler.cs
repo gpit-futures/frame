@@ -2,7 +2,7 @@
 
 namespace Futures.Infrastructure.MessageQueue
 {
-    public interface IMessageHandler<in T> where T : IMessage
+    public interface IMessageHandler<in T> where T : class, IMessage
     {
         Task Handle(T message);
     }

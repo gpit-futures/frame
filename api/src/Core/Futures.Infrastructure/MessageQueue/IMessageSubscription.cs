@@ -1,12 +1,10 @@
-﻿using System.Threading.Tasks;
-using Autofac;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
 using RawRabbit;
 
 namespace Futures.Infrastructure.MessageQueue
 {
     public interface IMessageSubscription
     {
-        Task Start(IBusClient bus, IContainer container);
+        void Start(IBusClient bus, IContainer container);
     }
 }
