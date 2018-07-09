@@ -5,9 +5,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Futures.Notifications.Infrastructure.Handlers
 {
-    public class ObservationCreatedHandler : MessageHandlerBase<Observation>, IMessageHandler<ObservationCreated>
+    public class ObservationUpdatedHandler : MessageHandlerBase<Observation>, IMessageHandler<ObservationUpdated>
     {
-        public async Task Handle(ObservationCreated message)
+        public async Task Handle(ObservationUpdated message)
         {
             var observation = this.ParseMessage(message);
         }

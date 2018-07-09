@@ -1,5 +1,4 @@
-﻿using Futures.Infrastructure;
-using Futures.Infrastructure.MessageQueue;
+﻿using Futures.Infrastructure.MessageQueue;
 using Futures.Notifications.Domain.Messages;
 using Hl7.Fhir.Model;
 using Task = System.Threading.Tasks.Task;

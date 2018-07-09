@@ -5,11 +5,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Futures.Notifications.Infrastructure.Handlers
 {
-    public class ObservationCreatedHandler : MessageHandlerBase<Observation>, IMessageHandler<ObservationCreated>
+    public class CarePlanCreatedHandler : MessageHandlerBase<CarePlan>, IMessageHandler<CarePlanCreated>
     {
-        public async Task Handle(ObservationCreated message)
+        public async Task Handle(CarePlanCreated message)
         {
-            var observation = this.ParseMessage(message);
+            var careplan = this.ParseMessage(message);
         }
     }
 }

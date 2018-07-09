@@ -5,5 +5,6 @@ namespace Futures.Api.Hubs
 {
     public class NotificationsHub : Hub
     {
+
     }
 }

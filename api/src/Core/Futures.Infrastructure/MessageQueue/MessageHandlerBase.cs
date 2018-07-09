@@ -2,7 +2,7 @@
 using Hl7.Fhir.Serialization;
 using Newtonsoft.Json;
 
-namespace Futures.Infrastructure
+namespace Futures.Infrastructure.MessageQueue
 {
     public abstract class MessageHandlerBase<T> where T : Base
     {
