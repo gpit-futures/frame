@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Runtime.Serialization.Formatters;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Futures.Api.Hubs;
+using Futures.Infrastructure.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using RawRabbit;
 using RawRabbit.Attributes;
 using RawRabbit.Common;
