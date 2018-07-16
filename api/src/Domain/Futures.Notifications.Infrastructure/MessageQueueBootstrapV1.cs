@@ -1,35 +1,35 @@
 ﻿using Autofac;
 using Futures.Infrastructure.MessageQueue;
-using Futures.Notifications.Domain.Messages;
+using Futures.Notifications.Domain.Messages.V1;
 using RawRabbit;
 
 namespace Futures.Notifications.Infrastructure
 {
-    public class MessageQueueBootstrap : IMessageSubscription
+    public class MessageQueueBootstrapV1 : IMessageSubscriptionV1
     {
         public void Start(IBusClient bus, IContainer container)
         {
-            bus.SubscribeAsync<CarePlanCreated>((message, context) =>
+            bus.SubscribeAsync<CarePlanCreatedV1>((message, context) =>
             {
-                var handler = container.Resolve<IMessageHandler<CarePlanCreated>>();
+                var handler = container.Resolve<IMessageHandlerV1<CarePlanCreatedV1>>();
                 return handler.Handle(message);
             }, config => config.WithSubscriberId(string.Empty));
 
-            bus.SubscribeAsync<ObservationCreated>((message, context) =>
+            bus.SubscribeAsync<ObservationCreatedV1>((message, context) =>
             {
-                var handler = container.Resolve<IMessageHandler<ObservationCreated>>();
+                var handler = container.Resolve<IMessageHandlerV1<ObservationCreatedV1>>();
                 return handler.Handle(message);
             }, config => config.WithSubscriberId(string.Empty));
 
-            bus.SubscribeAsync<ObservationUpdated>((message, context) =>
+            bus.SubscribeAsync<ObservationUpdatedV1>((message, context) =>
             {
-                var handler = container.Resolve<IMessageHandler<ObservationUpdated>>();
+                var handler = container.Resolve<IMessageHandlerV1<ObservationUpdatedV1>>();
                 return handler.Handle(message);
             }, config => config.WithSubscriberId(string.Empty));
 
-            bus.SubscribeAsync<AppointmentCreated>((message, context) =>
+            bus.SubscribeAsync<AppointmentCreatedV1>((message, context) =>
             {
-                var handler = container.Resolve<IMessageHandler<AppointmentCreated>>();
+                var handler = container.Resolve<IMessageHandlerV1<AppointmentCreatedV1>>();
                 return handler.Handle(message);
             }, config => config.WithSubscriberId(string.Empty));
 

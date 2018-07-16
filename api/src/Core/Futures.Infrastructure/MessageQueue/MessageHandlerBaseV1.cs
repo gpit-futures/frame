@@ -4,18 +4,18 @@ using Newtonsoft.Json;
 
 namespace Futures.Infrastructure.MessageQueue
 {
-    public abstract class MessageHandlerBase<T> where T : Base
+    public abstract class MessageHandlerBaseV1<T> where T : Base
     {
-        protected MessageHandlerBase()
+        protected MessageHandlerBaseV1()
         {
             this.Parser = new FhirJsonParser();
         }
 
         private FhirJsonParser Parser { get; }
 
-        protected T ParseMessage(IMessage message)
+        protected T ParseMessage(IMessageV1 message)
         {
-            return this.Parser.Parse<T>(JsonConvert.SerializeObject(message.Body));
+            return this.Parser.Parse<T>(JsonConvert.SerializeObject(message));
         }
     }
 }

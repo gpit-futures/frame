@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Futures.Infrastructure.Hubs;
 using Futures.Infrastructure.MessageQueue;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using RawRabbit;
 using RawRabbit.vNext;
@@ -34,10 +32,8 @@ namespace Futures.Api
         {
             var bus = BusClientFactory.CreateDefault(services);
 
-            var hub = container.Resolve<IHubContext<NotificationsHub>>();
-
-            var task = container.Resolve<IMessageSubscription>();
-            task.Start(bus, container, hub);
+            var task = container.Resolve<IMessageSubscriptionV1>();
+            task.Start(bus, container);
 
             return bus;
         }

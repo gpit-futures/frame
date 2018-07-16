@@ -8,11 +8,15 @@ namespace Futures.Notifications.Domain.Services.Notifications.Entities
     {
         public Guid Id { get; set; }
 
+        public string NhsNumber { get; set; }
+
         public string Ods { get; set; }
 
         public IEnumerable<string> Read { get; set; } = new List<string>();
 
         public string Summary { get; set; }
+
+        public string Details { get; set; }
 
         public string Type { get; set; }
 

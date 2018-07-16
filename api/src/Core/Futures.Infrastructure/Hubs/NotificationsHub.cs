@@ -9,7 +9,7 @@ namespace Futures.Infrastructure.Hubs
         {
             var test = this.Context.ConnectionId;
 
-            System.Console.WriteLine($"ClientId {test} conencted.");
+            System.Console.WriteLine($"ClientId {test} connected.");
             await base.OnConnectedAsync();
         }
     }
