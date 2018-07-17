@@ -21,29 +21,50 @@ let wss;
 
 start();
 // setup connection - and listen for 'patient-context:changed' events
-function start() {   
+function start() {
     notifier = new Notifier()
     context = require('rabbit.js').createContext('amqp://localhost:5672');
     // WEB SOCKETS
-    wss = new WebSocket.Server( { port: 1040 } )
-    wss.on('connection', function (w) { 
-         
-        w.on( 'message' , function (data)  {
+    wss = new WebSocket.Server({ port: 1040 })
+    wss.on('connection', function (w) {
+
+        w.on('message', function (data) {
             console.log(data)
             let message = JSON.parse(data);
             console.log("Event: ", message.event);
             console.log("Event: ", message.data);
-            if(message.event == "patient-context:changed") {
+            if (message.event == "patient-context:changed") {
                 triggerPatientContextEvent('patient-context:changed', message.data)
             } else {
                 triggerPatientContextEvent('patient-context:ended', null)
             }
-        })  
-        w.on('close', function() { 
-             console.log("Closed") 
-        })    
+        })
+        w.on('close', function () {
+            console.log("Closed")
+        })
         w.send("patient-context:changed - received")
-    }) 
+    })
+
+    // Deal with connection to signalR for notifications
+    // const signalR = require("@aspnet/signalr");
+    // let connection = new signalR.HubConnectionBuilder()
+    //     .withUrl("URL OF API")
+    //     .build();
+
+    // connection.on("send", data => {
+    //     console.log(data);
+    //     notifier.show(
+    //         data.type,
+    //         data.summary,
+    //         NotifierType.Info,
+    //         8000
+    //     );
+    // });
+
+    // connection.start()
+    //     .then(() => connection.invoke("send", "Hello"));
+
+
 }
 
 // adds an event listener to each webview and decodes/routes the event when triggered
@@ -59,7 +80,7 @@ export function setupListeners(webviews) {
                     event.args[0],
                     NotifierType.Warning,
                     8000
-                  );
+                );
             } else (
                 triggerPatientContextEvent(event.channel, event.args[0])
             )
@@ -69,6 +90,9 @@ export function setupListeners(webviews) {
     }
     // modules.Core[0].openDevTools();
     // modules.INR[0].openDevTools();
+    // modules.Appointments[0].openDevTools();
+    // modules.Appointments2[0].openDevTools();
+    // modules.Appointments3[0].openDevTools();
     // modules.InrLocal[0].openDevTools();
     // modules.CoreLocal[0].openDevTools();
 }
@@ -77,7 +101,7 @@ export function setupListeners(webviews) {
 function triggerPatientContextEvent(eventChannel, patient) {
     console.log(patient);
     store.commit(mutators.SET_PATIENT, patient)
-    store.commit(mutators.SET_PATIENT_CONTEXT, patient == null ? false:true)
+    store.commit(mutators.SET_PATIENT_CONTEXT, patient == null ? false : true)
 
     sendToThickClient(eventChannel, patient)
 
@@ -110,11 +134,11 @@ function sendToThickClient(eventChannel, patient) {
     console.log("testing socket")
     wss.broadcast = function broadcast(data) {
         wss.clients.forEach(function each(client) {
-          if (client.readyState === WebSocket.OPEN) {
-              console.log("sending to thick client")
-            client.send(data);
-          }
+            if (client.readyState === WebSocket.OPEN) {
+                console.log("sending to thick client")
+                client.send(data);
+            }
         });
-      };
-      wss.broadcast(JSON.stringify(patient), 'utf8');
+    };
+    wss.broadcast(JSON.stringify(patient), 'utf8');
 }

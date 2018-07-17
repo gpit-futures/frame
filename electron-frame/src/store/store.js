@@ -15,7 +15,8 @@ export default new Vuex.Store({
         token: null,
         showDrawer: false,
         showNotifications: false,
-        showDashboard: true
+        showDashboard: true,
+        notifications: []
 
     },
     mutations: {
@@ -84,14 +85,46 @@ export default new Vuex.Store({
                     "patient-context:ended"
                 ]
              }
+             let localGPConnect = {  
+                "id":"168be560-ab86-4054-a41e-a30e51dbbab9",
+                "applicationName":"Appointments",
+                "publisher":"Core GP Sys",
+                "sourceUrl":"http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com/#/",
+                "eventsOfInterest":[  
+                    "patient-context:changed",
+                    "patient-context:ended"
+                ]
+             }
+             let localGPConnect2 = {  
+                "id":"168ce3460-ab86-4054-b41e-a30e51dbbab1",
+                "applicationName":"Appointments2",
+                "publisher":"Core GP Sys",
+                "sourceUrl":"http://ec2-34-246-89-210.eu-west-1.compute.amazonaws.com/#/",
+                "eventsOfInterest":[  
+                    "patient-context:changed",
+                    "patient-context:ended"
+                ]
+             }
+
+             let localGPConnect3 = {  
+                "id":"168ce3460-ab86-7854-b41e-a67e51dbbab1",
+                "applicationName":"Appointments3",
+                "publisher":"Core GP Sys",
+                "sourceUrl":"http://localhost:9000/#/",
+                "eventsOfInterest":[  
+                    "patient-context:changed",
+                    "patient-context:ended"
+                ]
+             }
              
 
             if (clients == null) {
                 state.clients = []
             } else {
                 state.clients = clients
-                state.clients.push(localCore)
                 // state.clients.push(localInr)
+                // state.clients.push(localGPConnect2)
+                // state.clients.push(localGPConnect3)
             }
         },
         [mutators.LOGOUT](state) {
@@ -102,6 +135,11 @@ export default new Vuex.Store({
             state.selectedTitle = null,
             state.clients = [],
             state.showDashboard = true
+        },
+        [mutators.SET_NOTIFICATIONS](state, notifications) {
+            if (!null) {
+                state.notifications = notifications
+            }
         },
     },
     getters: {

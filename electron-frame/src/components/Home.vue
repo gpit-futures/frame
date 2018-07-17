@@ -8,7 +8,7 @@
         <!-- patient banner suplement component -->
       <patient-banner-supplement v-if="patientContext"
         class=""
-        :expanded=false></patient-banner-supplement>
+        :expanded=true></patient-banner-supplement>
         <!-- frame component -->
       <frames class="dw-frames"></frames>
     </div>

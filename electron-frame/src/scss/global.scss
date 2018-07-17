@@ -1,11 +1,20 @@
 @import "./_notifier.scss";
 @import "../../node_modules/vuetify/dist/vuetify.css";
 
+.notification-title {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .is-uppercase {
   text-transform: uppercase;
 }
 .has-text-weight-bold {
   font-weight: bolder;
+}
+
+.has-text-center {
+  text-align: center;
 }
 
 .menu__content {

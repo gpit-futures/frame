@@ -19,7 +19,7 @@
       </v-toolbar>
       <v-list dense>
         <template v-for="client of clients">
-          <v-list-tile :key="client.id" @click="select(client)" v-bind:class="{'is-hidden': client.id === '168be560-ab86-4020-a41e-a30e51dbbab2'}">
+          <v-list-tile :key="client.id" @click="select(client)">
             <v-list-tile-action>
               <v-icon>apps</v-icon>
             </v-list-tile-action>
