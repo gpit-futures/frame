@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Futures.Infrastructure.Hubs;
 using Futures.Infrastructure.MessageQueue;
 using Futures.Notifications.Domain.Messages;
@@ -10,9 +11,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Futures.Notifications.Infrastructure.Handlers
 {
-    public class ObservationCreatedHandler : MessageHandlerBase<Observation>, IMessageHandler<ObservationCreated>
+    public class CarePlanCreatedHandler : MessageHandlerBase<CarePlan>, IMessageHandler<CarePlanCreated>
     {
-        public ObservationCreatedHandler(IHubContext<NotificationsHub> hub, 
+        public CarePlanCreatedHandler(IHubContext<NotificationsHub> hub, 
             INotificationsRepository notifications)
         {
             this.Hub = hub;
@@ -23,11 +24,13 @@ namespace Futures.Notifications.Infrastructure.Handlers
 
         private INotificationsRepository Notifications { get; }
 
-        public async Task Handle(ObservationCreated message)
+        public async Task Handle(CarePlanCreated message)
         {
             var obj = this.ParseMessage(message);
 
-            var value = (SimpleQuantity)obj.Value;
+            var activity = obj.Activity.Select(x =>
+                    $"{((CodeableConcept)x.Detail.Product).Coding[0].Display} ({((CodeableConcept)x.Detail.Product).Coding[0].Code}) - {x.Detail.Status}")
+                .ToArray();
 
             var notification = new Notification
             {
@@ -35,8 +38,8 @@ namespace Futures.Notifications.Infrastructure.Handlers
                 NhsNumber = obj.Subject.Identifier.Value,
                 DateCreated = obj.Meta.LastUpdated?.DateTime ?? DateTime.UtcNow,
                 Type = obj.TypeName,
-                Summary = $"{obj.Code.Coding[0].Display}.",
-                Details = $"{obj.Code.Coding[0].Display}. Value: {value.Value}. Unit: {value.Unit}."
+                Summary = $"{obj.Title}. {obj.Period.Start} to {obj.Period.End}.",
+                Details = $"{obj.Title}. {obj.Period.Start} to {obj.Period.End}. {string.Join(", ", activity)}"
             };
 
             await this.Notifications.AddOrUpdate(notification);

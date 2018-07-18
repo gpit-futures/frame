@@ -32,7 +32,7 @@ namespace Futures.Api
         {
             var bus = BusClientFactory.CreateDefault(services);
 
-            var task = container.Resolve<IMessageSubscriptionV1>();
+            var task = container.Resolve<IMessageSubscription>();
             task.Start(bus, container);
 
             return bus;

@@ -10,9 +10,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Futures.Notifications.Infrastructure.Handlers
 {
-    public class ObservationCreatedHandler : MessageHandlerBase<Observation>, IMessageHandler<ObservationCreated>
+    public class ObservationUpdatedHandler: MessageHandlerBase<Observation>, IMessageHandler<ObservationUpdated>
     {
-        public ObservationCreatedHandler(IHubContext<NotificationsHub> hub, 
+        public ObservationUpdatedHandler(IHubContext<NotificationsHub> hub, 
             INotificationsRepository notifications)
         {
             this.Hub = hub;
@@ -23,20 +23,20 @@ namespace Futures.Notifications.Infrastructure.Handlers
 
         private INotificationsRepository Notifications { get; }
 
-        public async Task Handle(ObservationCreated message)
+        public async Task Handle(ObservationUpdated message)
         {
-            var obj = this.ParseMessage(message);
+            var observation = this.ParseMessage(message);
 
-            var value = (SimpleQuantity)obj.Value;
+            var value = (SimpleQuantity)observation.Value;
 
             var notification = new Notification
             {
                 Ods = message.Destination,
-                NhsNumber = obj.Subject.Identifier.Value,
-                DateCreated = obj.Meta.LastUpdated?.DateTime ?? DateTime.UtcNow,
-                Type = obj.TypeName,
-                Summary = $"{obj.Code.Coding[0].Display}.",
-                Details = $"{obj.Code.Coding[0].Display}. Value: {value.Value}. Unit: {value.Unit}."
+                NhsNumber = observation.Subject.Identifier.Value,
+                DateCreated = observation.Meta.LastUpdated?.DateTime ?? DateTime.UtcNow,
+                Type = observation.TypeName,
+                Summary = $"AMMENDED: {observation.Code.Coding[0].Display}.",
+                Details = $"AMMENDED: {observation.Code.Coding[0].Display}. Value: {value.Value}. Unit: {value.Unit}."
             };
 
             await this.Notifications.AddOrUpdate(notification);

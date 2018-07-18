@@ -4,9 +4,9 @@ namespace Futures.Infrastructure.MessageQueue
 {
     public interface IMessage
     {
-        string From { get; set; }
+        string Source { get; set; }
 
-        string To { get; set; }
+        string Destination { get; set; }
 
         Dictionary<string, dynamic> Body { get; set; }
     }

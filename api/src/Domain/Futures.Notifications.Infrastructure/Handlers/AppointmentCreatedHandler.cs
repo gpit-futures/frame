@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Futures.Infrastructure.Hubs;
 using Futures.Infrastructure.MessageQueue;
 using Futures.Notifications.Domain.Messages;
@@ -10,9 +11,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Futures.Notifications.Infrastructure.Handlers
 {
-    public class ObservationCreatedHandler : MessageHandlerBase<Observation>, IMessageHandler<ObservationCreated>
+    public class AppointmentCreatedHandler: MessageHandlerBase<Appointment>, IMessageHandler<AppointmentCreated>
     {
-        public ObservationCreatedHandler(IHubContext<NotificationsHub> hub, 
+        public AppointmentCreatedHandler(IHubContext<NotificationsHub> hub, 
             INotificationsRepository notifications)
         {
             this.Hub = hub;
@@ -23,20 +24,19 @@ namespace Futures.Notifications.Infrastructure.Handlers
 
         private INotificationsRepository Notifications { get; }
 
-        public async Task Handle(ObservationCreated message)
+        public async Task Handle(AppointmentCreated message)
         {
             var obj = this.ParseMessage(message);
-
-            var value = (SimpleQuantity)obj.Value;
 
             var notification = new Notification
             {
                 Ods = message.Destination,
-                NhsNumber = obj.Subject.Identifier.Value,
+                // need the patient NHS
+                NhsNumber = obj.Participant.SingleOrDefault(x => x.Actor.Reference.Contains("Patient"))?.Actor.Reference,
                 DateCreated = obj.Meta.LastUpdated?.DateTime ?? DateTime.UtcNow,
                 Type = obj.TypeName,
-                Summary = $"{obj.Code.Coding[0].Display}.",
-                Details = $"{obj.Code.Coding[0].Display}. Value: {value.Value}. Unit: {value.Unit}."
+                Summary = $"{obj.Status}. {obj.Start?.DateTime:g} to {obj.End?.DateTime:g}.",
+                Details = $"{obj.Status}. {obj.Start?.DateTime:g} to {obj.End?.DateTime:g}. {obj.Description}"
             };
 
             await this.Notifications.AddOrUpdate(notification);
