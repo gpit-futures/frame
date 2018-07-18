@@ -36,7 +36,7 @@ namespace Futures.Notifications.Infrastructure.Handlers
             {
                 Ods = message.Destination,
                 NhsNumber = obj.Subject.Identifier.Value,
-                DateCreated = obj.Meta.LastUpdated?.DateTime ?? DateTime.UtcNow,
+                DateCreated = obj.Meta?.LastUpdated?.DateTime ?? DateTime.UtcNow,
                 Type = obj.TypeName,
                 Summary = $"{obj.Title}. {obj.Period.Start} to {obj.Period.End}.",
                 Details = $"{obj.Title}. {obj.Period.Start} to {obj.Period.End}. {string.Join(", ", activity)}"

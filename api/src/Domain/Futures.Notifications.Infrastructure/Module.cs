@@ -17,7 +17,7 @@ namespace Futures.Notifications.Infrastructure
             builder.RegisterType<MessageQueueBootstrap>().As<IMessageSubscription>();
 
             builder.RegisterType<ObservationCreatedHandler>().As<IMessageHandler<ObservationCreated>>();
-            //builder.RegisterType<EncounterCreatedHandler>().As<IMessageHandler<EncounterCreated>>();
+            builder.RegisterType<AppointmentCreatedHandler>().As<IMessageHandler<AppointmentCreated>>();
             builder.RegisterType<CarePlanCreatedHandler>().As<IMessageHandler<CarePlanCreated>>();
             builder.RegisterType<ObservationUpdatedHandler>().As<IMessageHandler<ObservationUpdated>>();
 

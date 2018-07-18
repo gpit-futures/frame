@@ -33,7 +33,7 @@ namespace Futures.Notifications.Infrastructure.Handlers
             {
                 Ods = message.Destination,
                 NhsNumber = obj.Subject.Identifier.Value,
-                DateCreated = obj.Meta.LastUpdated?.DateTime ?? DateTime.UtcNow,
+                DateCreated = obj.Meta?.LastUpdated?.DateTime ?? DateTime.UtcNow,
                 Type = obj.TypeName,
                 Summary = $"{obj.Code.Coding[0].Display}.",
                 Details = $"{obj.Code.Coding[0].Display}. Value: {value.Value}. Unit: {value.Unit}."

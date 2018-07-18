@@ -33,7 +33,7 @@ namespace Futures.Notifications.Infrastructure.Handlers
                 Ods = message.Destination,
                 // need the patient NHS
                 NhsNumber = obj.Participant.SingleOrDefault(x => x.Actor.Reference.Contains("Patient"))?.Actor.Reference,
-                DateCreated = obj.Meta.LastUpdated?.DateTime ?? DateTime.UtcNow,
+                DateCreated = obj.Meta?.LastUpdated?.DateTime ?? DateTime.UtcNow,
                 Type = obj.TypeName,
                 Summary = $"{obj.Status}. {obj.Start?.DateTime:g} to {obj.End?.DateTime:g}.",
                 Details = $"{obj.Status}. {obj.Start?.DateTime:g} to {obj.End?.DateTime:g}. {obj.Description}"
