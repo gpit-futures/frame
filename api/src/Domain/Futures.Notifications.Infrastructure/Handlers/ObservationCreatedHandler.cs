@@ -1,5 +1,5 @@
 ﻿using System;
-using Futures.Infrastructure.Hubs;
+using Futures.Application.Hubs;
 using Futures.Infrastructure.MessageQueue;
 using Futures.Notifications.Domain.Messages;
 using Futures.Notifications.Domain.Services.Notifications.Entities;

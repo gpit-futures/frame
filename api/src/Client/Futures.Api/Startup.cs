@@ -1,11 +1,13 @@
 ﻿using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Futures.Infrastructure.Hubs;
+using Futures.Application.Hubs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using RawRabbit;
 using RawRabbit.Attributes;
 using RawRabbit.Common;
@@ -15,14 +17,14 @@ namespace Futures.Api
 {
     public class Startup
     {
+        private IContainer _applicationContainer;
+
+        private IBusClient _bus;
+
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration;
         }
-
-        private IContainer _applicationContainer;
-
-        private IBusClient _bus;
 
         public IConfiguration Configuration { get; }
 
@@ -38,9 +40,29 @@ namespace Futures.Api
             services.AddMvc();
             services.AddSignalR();
 
-            services.AddRawRabbit(config => config.AddJsonFile("rabbitmq.json"), ioc =>
+            services.AddRawRabbit(config => config.AddJsonFile("rabbitmq.json"),
+                ioc => { ioc.AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>(); });
+
+            var token = this.Configuration.GetSection("Jwk").Get<JsonWebKey>();
+
+            services.AddAuthorization(conf =>
             {
-                ioc.AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>();
+                conf.AddPolicy("Read", pol => pol.RequireClaim("authorities", "FOO_READ"));
+                conf.AddPolicy("Write", pol => pol.RequireClaim("authorities", "FOO_WRITE"));
+            })
+            .AddAuthentication(conf =>
+            {
+                conf.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                conf.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(conf =>
+            {
+                conf.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    IssuerSigningKey = token
+                };
             });
 
             this._applicationContainer = Bootstrapper.SetupContainer(services);
@@ -50,17 +72,11 @@ namespace Futures.Api
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseCors("CorsPolicy");
             app.UseMvc();
-            app.UseSignalR(config =>
-            {
-                config.MapHub<NotificationsHub>("/ws/notifications");
-            });
+            app.UseSignalR(config => { config.MapHub<NotificationsHub>("/ws/notifications"); });
 
             lifetime.ApplicationStopped.Register(() =>
             {

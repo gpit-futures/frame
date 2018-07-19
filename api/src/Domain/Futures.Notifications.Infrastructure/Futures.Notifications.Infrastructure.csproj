@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Application\Futures.Application\Futures.Application.csproj" />
     <ProjectReference Include="..\..\Core\Futures.Infrastructure\Futures.Infrastructure.csproj" />
     <ProjectReference Include="..\Futures.Notifications.Domain\Futures.Notifications.Domain.csproj" />
   </ItemGroup>
