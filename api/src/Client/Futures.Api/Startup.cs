@@ -75,6 +75,8 @@ namespace Futures.Api
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseCors("CorsPolicy");
+            app.UseJwtSignalRAuthentication();
+            app.UseAuthentication();
             app.UseMvc();
             app.UseSignalR(config => { config.MapHub<NotificationsHub>("/ws/notifications"); });
 
