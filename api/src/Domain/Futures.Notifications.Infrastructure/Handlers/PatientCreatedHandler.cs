@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Futures.Application.Hubs;
 using Futures.Infrastructure.MessageQueue;
 using Futures.Notifications.Domain.Messages;
@@ -10,9 +11,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Futures.Notifications.Infrastructure.Handlers
 {
-    public class ObservationUpdatedHandler: MessageHandlerBase<Observation>, IMessageHandler<ObservationUpdated>
+    public class PatientCreatedHandler : MessageHandlerBase<Patient>, IMessageHandler<PatientCreated>
     {
-        public ObservationUpdatedHandler(IHubContext<NotificationsHub> hub, 
+        public PatientCreatedHandler(IHubContext<NotificationsHub> hub, 
             INotificationsRepository notifications)
         {
             this.Hub = hub;
@@ -23,21 +24,20 @@ namespace Futures.Notifications.Infrastructure.Handlers
 
         private INotificationsRepository Notifications { get; }
 
-        public async Task Handle(ObservationUpdated message)
+        public async Task Handle(PatientCreated message)
         {
             var obj = this.ParseMessage(message);
-
-            var value = (SimpleQuantity)obj.Value;
+            var usual = obj.Name.First(n => n.Use == HumanName.NameUse.Usual);
 
             var notification = new Notification
             {
                 Ods = message.Destination,
                 System = message.System,
-                NhsNumber = obj.Subject.Identifier.Value,
+                NhsNumber = obj.Identifier[0]?.Value,
                 DateCreated = DateTime.UtcNow,
                 Type = obj.TypeName,
-                Summary = $"AMMENDED: {obj.Code.Coding[0].Display}.",
-                Details = $"Value: {value.Value}. Unit: {value.Unit}."
+                Summary = $"Patient Created: {obj.Identifier[0]?.Value}",
+                Details = $"{usual?.Family}, {string.Join(" ", usual?.Given)} ({string.Join(" ", usual?.Prefix)})"
             };
 
             await this.Notifications.AddOrUpdate(notification);

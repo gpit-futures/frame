@@ -31,16 +31,17 @@ namespace Futures.Notifications.Infrastructure.Handlers
             var notification = new Notification
             {
                 Ods = message.Destination,
+                System = message.System,
                 // need the patient NHS
                 NhsNumber = obj.Participant.SingleOrDefault(x => x.Actor.Reference.Contains("Patient"))?.Actor.Reference,
-                DateCreated = obj.Meta?.LastUpdated?.DateTime ?? DateTime.UtcNow,
+                DateCreated = DateTime.UtcNow,
                 Type = obj.TypeName,
                 Summary = $"{obj.Status}. {obj.Start?.DateTime:g} to {obj.End?.DateTime:g}.",
-                Details = $"{obj.Status}. {obj.Start?.DateTime:g} to {obj.End?.DateTime:g}. {obj.Description}"
+                Details = $"{obj.Description}"
             };
 
             await this.Notifications.AddOrUpdate(notification);
-            await this.Hub.Clients.All.SendAsync("notification", notification);
+            await this.Hub.Clients.Group(message.Destination?.ToLowerInvariant()).SendAsync("notification", notification);
         }
     }
 }

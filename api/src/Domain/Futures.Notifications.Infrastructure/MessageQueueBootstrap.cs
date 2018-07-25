@@ -9,11 +9,11 @@ namespace Futures.Notifications.Infrastructure
     {
         public void Start(IBusClient bus, IContainer container)
         {
-            bus.SubscribeAsync<CarePlanCreated>((message, context) =>
-            {
-                var handler = container.Resolve<IMessageHandler<CarePlanCreated>>();
-                return handler.Handle(message);
-            }, config => config.WithSubscriberId(string.Empty));
+            //bus.SubscribeAsync<CarePlanCreated>((message, context) =>
+            //{
+            //    var handler = container.Resolve<IMessageHandler<CarePlanCreated>>();
+            //    return handler.Handle(message);
+            //}, config => config.WithSubscriberId(string.Empty));
 
             bus.SubscribeAsync<ObservationCreated>((message, context) =>
             {
@@ -30,6 +30,12 @@ namespace Futures.Notifications.Infrastructure
             bus.SubscribeAsync<AppointmentCreated>((message, context) =>
             {
                 var handler = container.Resolve<IMessageHandler<AppointmentCreated>>();
+                return handler.Handle(message);
+            }, config => config.WithSubscriberId(string.Empty));
+
+            bus.SubscribeAsync<PatientCreated>((message, context) =>
+            {
+                var handler = container.Resolve<IMessageHandler<PatientCreated>>();
                 return handler.Handle(message);
             }, config => config.WithSubscriberId(string.Empty));
 

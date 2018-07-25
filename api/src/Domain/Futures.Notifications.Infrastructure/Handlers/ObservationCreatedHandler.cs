@@ -32,15 +32,16 @@ namespace Futures.Notifications.Infrastructure.Handlers
             var notification = new Notification
             {
                 Ods = message.Destination,
+                System = message.System,
                 NhsNumber = obj.Subject.Identifier.Value,
-                DateCreated = obj.Meta?.LastUpdated?.DateTime ?? DateTime.UtcNow,
+                DateCreated = DateTime.UtcNow,
                 Type = obj.TypeName,
                 Summary = $"{obj.Code.Coding[0].Display}.",
-                Details = $"{obj.Code.Coding[0].Display}. Value: {value.Value}. Unit: {value.Unit}."
+                Details = $"Value: {value.Value}. Unit: {value.Unit}."
             };
 
             await this.Notifications.AddOrUpdate(notification);
-            await this.Hub.Clients.All.SendAsync("notification", notification);
+            await this.Hub.Clients.Group(message.Destination?.ToLowerInvariant()).SendAsync("notification", notification);
         }
     }
 }

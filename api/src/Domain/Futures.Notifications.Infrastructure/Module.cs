@@ -19,6 +19,7 @@ namespace Futures.Notifications.Infrastructure
             builder.RegisterType<ObservationCreatedHandler>().As<IMessageHandler<ObservationCreated>>();
             builder.RegisterType<AppointmentCreatedHandler>().As<IMessageHandler<AppointmentCreated>>();
             builder.RegisterType<CarePlanCreatedHandler>().As<IMessageHandler<CarePlanCreated>>();
+            builder.RegisterType<PatientCreatedHandler>().As<IMessageHandler<PatientCreated>>();
             builder.RegisterType<ObservationUpdatedHandler>().As<IMessageHandler<ObservationUpdated>>();
 
             builder

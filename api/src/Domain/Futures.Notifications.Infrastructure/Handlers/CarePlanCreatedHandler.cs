@@ -35,15 +35,16 @@ namespace Futures.Notifications.Infrastructure.Handlers
             var notification = new Notification
             {
                 Ods = message.Destination,
+                System = message.System,
                 NhsNumber = obj.Subject.Identifier.Value,
-                DateCreated = obj.Meta?.LastUpdated?.DateTime ?? DateTime.UtcNow,
+                DateCreated = DateTime.UtcNow,
                 Type = obj.TypeName,
                 Summary = $"{obj.Title}. {obj.Period.Start} to {obj.Period.End}.",
-                Details = $"{obj.Title}. {obj.Period.Start} to {obj.Period.End}. {string.Join(", ", activity)}"
+                Details = $"{string.Join(", ", activity)}"
             };
 
             await this.Notifications.AddOrUpdate(notification);
-            await this.Hub.Clients.All.SendAsync("notification", notification);
+            await this.Hub.Clients.Group(message.Destination?.ToLowerInvariant()).SendAsync("notification", notification);
         }
     }
 }
