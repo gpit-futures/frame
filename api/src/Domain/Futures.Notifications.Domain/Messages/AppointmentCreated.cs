@@ -9,6 +9,8 @@ namespace Futures.Notifications.Domain.Messages
     [Queue(Name = "created-appointment-queue", Durable = true)]
     public class AppointmentCreated : IMessage
     {
+        public string System { get; set; }
+
         public string Source { get; set; }
 
         public string Destination { get; set; }

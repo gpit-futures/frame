@@ -9,6 +9,8 @@ namespace Futures.Notifications.Domain.Messages
     [Queue(Name = "created-observation-queue", Durable = true)]
     public class ObservationCreated : IMessage
     {
+        public string System { get; set; }
+
         public string Source { get; set; }
 
         public string Destination { get; set; }

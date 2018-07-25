@@ -10,6 +10,8 @@ namespace Futures.Notifications.Domain.Services.Notifications.Entities
 
         public string NhsNumber { get; set; }
 
+        public string System { get; set; }
+
         public string Ods { get; set; }
 
         public IEnumerable<string> Read { get; set; } = new List<string>();
