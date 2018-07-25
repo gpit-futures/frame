@@ -44,27 +44,6 @@ function start() {
         })
         w.send("patient-context:changed - received")
     })
-
-    // Deal with connection to signalR for notifications
-    // const signalR = require("@aspnet/signalr");
-    // let connection = new signalR.HubConnectionBuilder()
-    //     .withUrl("URL OF API")
-    //     .build();
-
-    // connection.on("send", data => {
-    //     console.log(data);
-    //     notifier.show(
-    //         data.type,
-    //         data.summary,
-    //         NotifierType.Info,
-    //         8000
-    //     );
-    // });
-
-    // connection.start()
-    //     .then(() => connection.invoke("send", "Hello"));
-
-
 }
 
 // adds an event listener to each webview and decodes/routes the event when triggered

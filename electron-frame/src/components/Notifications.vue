@@ -20,20 +20,23 @@
       </v-toolbar>
 
       <v-list three-line>
-        <template v-for="client of clients">
+        <transition-group name="list">
+        <template v-for="notification of notifications">
           <v-list-group
-            :key="client.id">
-
-            <v-list-tile slot="activator" :key="client.id">
+            :key="notification.id">
+            <v-list-tile slot="activator" :key="notification.id">
+              <v-icon @click="deleteNotification(notification)" class="notification-close" >close</v-icon>
             <v-list-tile-action>
-              <v-icon>event_available</v-icon>
+              <!-- <v-icon>event_available</v-icon> -->
+              <v-icon v-if="notification.type == 'Appointment'">event_available</v-icon>
+              <v-icon v-else-if="notification.type == 'Observation'">notes</v-icon>
+              <v-icon v-else-if="notification.type == 'Patient'">person_pin</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title class="notification-title" @click="select(client)">
-              SMITH, John. (Mr) - 999 999 9049
-              </v-list-tile-title>
-              <v-list-tile-sub-title>Appointment Cancelled</v-list-tile-sub-title>
-              <v-list-tile-sub-title>{{"2018-07-17T14:02:38.489" | readableDate}}</v-list-tile-sub-title>
+              <!-- <v-list-tile-title class="notification-title" @click="select(notification)">{{notification.nhsNumber}} - {{notification.type}}</v-list-tile-title> -->
+              <v-list-tile-title class="notification-title" @click="">{{notification.nhsNumber}} - {{notification.type}}</v-list-tile-title>
+              <v-list-tile-sub-title>{{notification.system}}</v-list-tile-sub-title>
+              <v-list-tile-sub-title>{{notification.dateCreated | readableDate}}</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
 
@@ -42,12 +45,13 @@
                 <v-icon></v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-              Consultation with Dr. H. Marshall to discuss inflammation of the patient's ear which has persisted for over 2 weeks since last visit.
+              {{notification.details}}
               </v-list-tile-content>
             </v-list-tile>
             
           </v-list-group>
         </template>
+        </transition-group>
       </v-list>
 
       <v-dialog v-model="dialog" max-width="400">
@@ -68,6 +72,7 @@
 <script>
 import SidebarIcon from "./Sidebar-Icon.vue";
 import mutators from "../store/mutators";
+import { NotificationService } from "../services/notification-service";
 import moment from "moment";
 
 export default {
@@ -104,13 +109,24 @@ export default {
     menuClosed(state) {
       console.log("State: " + state);
       this.$store.commit(mutators.SET_SHOW_NOTIFICATIONS, state);
+    },
+    deleteNotification(notification) {
+      this.$store.commit(mutators.REMOVE_NOTIFICATION, notification);
+      let notificationService = new NotificationService();
+      notificationService.removeNotification(this.$store.state.token.access_token, notification.id)
     }
   },
   filters: {
-  readableDate: function (value) {
-    // 2018-07-05T14:02:38.489
-    return moment(value, "YYYY-MM-DD, h:mm:ss").fromNow();
+    readableDate: function (value) {
+      // 2018-07-05T14:02:38.489
+      moment.relativeTimeThreshold('s', 59);
+      moment.relativeTimeThreshold('m', 59);
+      moment.relativeTimeThreshold('h', 23);
+      moment.relativeTimeThreshold('d', 28);
+      moment.relativeTimeThreshold('M', 12);
+
+      return moment.utc(value, "YYYY-MM-DD, hh:mm:ss").fromNow();
+    }
   }
-}
 };
 </script>

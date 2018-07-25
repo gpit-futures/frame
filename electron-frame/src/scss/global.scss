@@ -206,3 +206,34 @@ html {
     }
   }
 }
+
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active, .list-leave-active {
+  transition: all 0.5s;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateX(350px);
+}
+
+.list__group__header__append-icon {
+  display:none;
+}
+
+.notifier-body,
+.subtitle {
+  font-family: 'Roboto', sans-serif;
+}
+
+.notification-close {
+  right: 0px;
+  position: absolute;
+  top: 0px;
+}
+
+.navigation-drawer > .list:not(.list--dense) .list__tile {
+  max-width: 278px;
+}

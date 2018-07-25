@@ -122,6 +122,7 @@ export default new Vuex.Store({
                 state.clients = []
             } else {
                 state.clients = clients
+                // state.clients.push(localCore)
                 // state.clients.push(localInr)
                 // state.clients.push(localGPConnect2)
                 // state.clients.push(localGPConnect3)
@@ -139,6 +140,16 @@ export default new Vuex.Store({
         [mutators.SET_NOTIFICATIONS](state, notifications) {
             if (!null) {
                 state.notifications = notifications
+            }
+        },
+        [mutators.ADD_NOTIFICATION](state, notification) {
+            if (!null) {
+                state.notifications.unshift(notification)
+            }
+        },
+        [mutators.REMOVE_NOTIFICATION](state, notification) {
+            if (!null) {
+                state.notifications.splice(state.notifications.indexOf(notification),1)
             }
         },
     },

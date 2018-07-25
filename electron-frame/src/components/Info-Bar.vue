@@ -80,6 +80,7 @@ export default {
   methods: {
     logout() {
       this.$store.commit(mutators.LOGOUT);
+      this.$root.$emit('notifications')
       this.$router.push({ name: "Login" });
     },
     toggleDrawer() {

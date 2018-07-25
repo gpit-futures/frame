@@ -39,6 +39,7 @@
 
 <script>
 import { UserService } from "../services/user-service";
+import { NotificationService } from "../services/notification-service";
 import { Notifier, NotifierType } from "../utilities/notifier";
 import mutators from "../store/mutators";
 import axios from "axios";
@@ -55,7 +56,8 @@ export default {
       userName: "",
       user: {},
       loadingUsers: true,
-      notifier: new Notifier()
+      notifier: new Notifier(),
+      connection: null
     };
   },
   methods: {
@@ -85,7 +87,38 @@ export default {
         this.$store.commit(mutators.SET_SHOW_DRAWER, true);
         this.$router.push({ name: "Home", params: { user: this.user } });
         // this.$router.push({ name: "Dashboard", params: { user: this.user } });
+        let notificationService = new NotificationService();
+
+        // SETUP NOTIFICATIONS
+        this.$store.commit(
+          mutators.SET_NOTIFICATIONS,
+          await notificationService.getNotifications(this.token.access_token)
+        );
+        console.log(this.notifications)
+
+        // Toast Notifications
+        // Deal with connection to signalR for notifications
+        const signalR = require("@aspnet/signalr");
+        this.connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/ws/notifications", {
+                accessTokenFactory: () => this.$store.state.token.access_token})
+            .build();
+
+        this.connection.on("notification", data => {
+            console.log(data);
+            this.notifier.show(
+                data.type,
+                data.summary,
+                NotifierType.Info,
+                8000
+            );
+            this.$store.commit(mutators.ADD_NOTIFICATION, data);
+        });
+        this.connection.start();
       }
+    },
+    logout() {
+      this.connection.stop();
     },
     async obtainAccessToken(username, password) {
       let json;
@@ -130,6 +163,12 @@ export default {
     this.loginUsers = await userService.getUsers();
     this.loadingUsers = false;
     console.log(this.loginUsers);
+
+    this.$root.$on('notifications', () => {
+      console.log('connection closed');
+      this.logout();
+    })
+    
   }
 };
 </script>
