@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Futures.Infrastructure.Mongo;
 using Futures.Notifications.Domain.Services.Notifications.Entities;
@@ -28,7 +29,16 @@ namespace Futures.Notifications.Infrastructure.Notifications
         public async Task<IEnumerable<Notification>> GetAllByOds(string ods)
         {
             return await this.Collection
-                .Where(x => string.Equals(x.Ods, ods, StringComparison.InvariantCultureIgnoreCase))
+                .Where(x => string.Equals(x.Ods, ods))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Notification>> GetAllByOds(string ods, string username)
+        {
+            var user = $"{ods}:{username}";
+
+            return await this.Collection
+                .Where(x => string.Equals(x.Ods, ods) && !x.Read.Contains(user))
                 .ToListAsync();
         }
 

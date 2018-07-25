@@ -11,6 +11,8 @@ namespace Futures.Notifications.Domain.Services.Notifications.Repositories
 
         Task<IEnumerable<Notification>> GetAllByOds(string ods);
 
+        Task<IEnumerable<Notification>> GetAllByOds(string ods, string username);
+
         Task<Notification> GetOne(Guid id);
 
         Task AddOrUpdate(Notification item);

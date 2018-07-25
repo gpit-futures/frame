@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Futures.Notifications.Domain.Services.Notifications.Repositories;
@@ -8,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Futures.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Read")]
     [Route("api/notifications")]
     public class NotificationsController : Controller
     {
@@ -16,6 +15,7 @@ namespace Futures.Api.Controllers
         {
             this.Notifcations = notifcations;
         }
+
 
         private INotificationsRepository Notifcations { get; }
 
@@ -29,8 +29,10 @@ namespace Futures.Api.Controllers
                 return this.BadRequest();
             }
 
-            var notifications = await this.Notifcations.GetAllByOds(ods.Value);
-            return this.Ok(notifications);
+            var user = this.User.FindFirst(x => x.Type == "user_name");
+
+            var notifications = await this.Notifcations.GetAllByOds(ods.Value, user.Value);
+            return this.Ok(notifications.OrderByDescending(x => x.DateCreated));
         }
 
         [HttpPost("{id}/read")]

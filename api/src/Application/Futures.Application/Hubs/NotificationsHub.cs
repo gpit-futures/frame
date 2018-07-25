@@ -13,7 +13,7 @@ namespace Futures.Application.Hubs
             var ods = this.Context.User.FindFirst(x => x.Type == "odsId");
             var connectionId = this.Context.ConnectionId;
 
-            await this.Groups.AddToGroupAsync(connectionId, ods?.Value);
+            await this.Groups.AddToGroupAsync(connectionId, ods?.Value?.ToLowerInvariant());
             await base.OnConnectedAsync();
         }
 
@@ -22,7 +22,7 @@ namespace Futures.Application.Hubs
             var ods = this.Context.User.FindFirst(x => x.Type == "odsId");
             var connectionId = this.Context.ConnectionId;
 
-            await this.Groups.RemoveFromGroupAsync(connectionId, ods?.Value);
+            await this.Groups.RemoveFromGroupAsync(connectionId, ods?.Value?.ToLowerInvariant());
             await base.OnDisconnectedAsync(exception);
         }
     }
