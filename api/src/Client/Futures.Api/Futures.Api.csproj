@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="RawRabbit" Version="1.10.4" />
     <PackageReference Include="RawRabbit.Attributes" Version="1.10.4" />
     <PackageReference Include="RawRabbit.vNext" Version="1.10.4" />
@@ -28,10 +29,14 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Futures.Application\Futures.Application.csproj" />
     <ProjectReference Include="..\..\Core\Futures.Infrastructure\Futures.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Domain\Futures.Dashboard.Infrastructure\Futures.Dashboard.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Domain\Futures.Notifications.Infrastructure\Futures.Notifications.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="client-list.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="rabbitmq.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -69,6 +69,7 @@ namespace Futures.Api
         {
             builder.RegisterModule<Futures.Infrastructure.Module>();
             builder.RegisterModule<Futures.Notifications.Infrastructure.Module>();
+            builder.RegisterModule<Futures.Dashboard.Infrastructure.Module>();
         }
     }
 }
