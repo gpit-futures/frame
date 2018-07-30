@@ -3,7 +3,7 @@
     "Username": "framework",
     "Password": "1FRAMEWORK",
     "Port": 5672,
-    //"Hostnames": [ "ec2-35-177-15-201.eu-west-2.compute.amazonaws.com" ],
+    "Hostnames": [ "ec2-35-177-15-201.eu-west-2.compute.amazonaws.com" ],
     "RequestTimeout": "00:00:10",
     "PersistentDeliveryMode": true,
     "AutoCloseConnection": true,

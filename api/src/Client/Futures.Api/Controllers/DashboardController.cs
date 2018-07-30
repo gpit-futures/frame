@@ -5,6 +5,7 @@ using Futures.Dashboard.Domain.Services.RecentPatientLists;
 using Futures.Dashboard.Domain.Services.RecentPatientLists.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Futures.Api.Controllers
 {
@@ -36,11 +37,19 @@ namespace Futures.Api.Controllers
 
             var recentPatients = await this.RecentPatientLists.GetOneByUser($"{user.Ods}:{user.Username}");
 
-            return this.Ok(recentPatients);
+            if (!string.IsNullOrWhiteSpace(recentPatients?.Patients))
+            {
+                var patients =
+                    JsonConvert.DeserializeObject<IEnumerable<Dictionary<string, dynamic>>>(recentPatients.Patients);
+
+                return this.Ok(patients);
+            }
+
+            return this.Ok(new List<Dictionary<string, dynamic>>());
         }
 
         [HttpPost("recent-patients")]
-        public async Task<IActionResult> SaveRecentPatient(IEnumerable<Dictionary<string, dynamic>> patients)
+        public async Task<IActionResult> SaveRecentPatient([FromBody] IEnumerable<Dictionary<string, dynamic>> patients)
         {
             var user = this.GetUser();
 
@@ -49,7 +58,9 @@ namespace Futures.Api.Controllers
                 return this.BadRequest();
             }
 
-            await this.RecentPatientListsService.AddOrUpdateUserRecentPatients($"{user.Ods}:{user.Username}", patients);
+            var json = JsonConvert.SerializeObject(patients);
+
+            await this.RecentPatientListsService.AddOrUpdateUserRecentPatients($"{user.Ods}:{user.Username}", json);
 
             return this.Ok();
         }

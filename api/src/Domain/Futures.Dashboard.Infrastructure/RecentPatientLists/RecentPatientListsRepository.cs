@@ -9,18 +9,17 @@ namespace Futures.Dashboard.Infrastructure.RecentPatientLists
 {
     public class RecentPatientListsRepository : IRecentPatientListsRepository
     {
-        public RecentPatientListsRepository(IMongoCollection<RecentPatientList> collection)
+        public RecentPatientListsRepository(IMongoDatabaseFactory factory)
         {
-            this.Collection = collection;
+            this.Collection = factory.GetDatabase()
+                .GetCollection<RecentPatientList>("recentPatientLists");
         }
 
         private IMongoCollection<RecentPatientList> Collection { get; }
 
-        public async Task<RecentPatientList> GetOneByUser(string user)
+        public Task<RecentPatientList> GetOneByUser(string user)
         {
-            var result = await this.Collection.FindAsync(x => string.Equals(x.User, user));
-
-            return result.FirstOrDefault();
+            return this.Collection.GetOneAsync(user);
         }
 
         public Task<RecentPatientList> GetOne(Guid id)
@@ -31,6 +30,16 @@ namespace Futures.Dashboard.Infrastructure.RecentPatientLists
         public Task AddOrUpdate(RecentPatientList item)
         {
             return this.Collection.AddOrUpdate(item);
+        }
+    }
+
+    internal static class RecentPatientListExtensions
+    {
+        public static async Task<T> GetOneAsync<T>(this IMongoCollection<T> collection, string user) where T : RecentPatientList
+        {
+            return await collection
+                .Find(Builders<T>.Filter.Eq(x => x.User, user))
+                .SingleOrDefaultAsync();
         }
     }
 }

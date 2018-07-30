@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Futures.Domain.Interfaces;
 
-namespace Futures.Api.Models
+namespace Futures.Lists.Domain.Services.ClientLists.Entities
 {
-    public class ClientList
+    public class Client : IEntity
     {
         public Guid Id { get; set; }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Futures.Domain.Interfaces;
 
 namespace Futures.Dashboard.Domain.Services.RecentPatientLists.Entities
@@ -10,6 +9,6 @@ namespace Futures.Dashboard.Domain.Services.RecentPatientLists.Entities
 
         public string User { get; set; }
 
-        public IEnumerable<Dictionary<string, dynamic>> Patients { get; set; } = new List<Dictionary<string, dynamic>>();
+        public string Patients { get; set; }
     }
 }

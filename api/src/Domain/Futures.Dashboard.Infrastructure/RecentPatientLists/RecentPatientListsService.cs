@@ -15,7 +15,7 @@ namespace Futures.Dashboard.Infrastructure.RecentPatientLists
 
         private IRecentPatientListsRepository RecentPatients { get; }
 
-        public async Task AddOrUpdateUserRecentPatients(string user, IEnumerable<Dictionary<string, dynamic>> patients)
+        public async Task AddOrUpdateUserRecentPatients(string user, string patients)
         {
             var existing = await this.RecentPatients.GetOneByUser(user)
                            ?? new RecentPatientList

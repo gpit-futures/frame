@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using Futures.Api.Models;
+using System.Threading.Tasks;
+using Futures.Lists.Domain.Services.ClientLists.Entities;
+using Futures.Lists.Domain.Services.ClientLists.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Futures.Api.Controllers
 {
@@ -14,54 +13,31 @@ namespace Futures.Api.Controllers
     [Route("api/client-lists")]
     public class ClientListController : Controller
     {
+        public ClientListController(IClientListRepository clientLists)
+        {
+            this.ClientLists = clientLists;
+        }
+
+        private IClientListRepository ClientLists { get; }
+
         [HttpGet("{id}")]
-        public IActionResult GetUserModules(Guid id)
+        public async Task<IActionResult> GetUserModules(Guid id)
         {
 
-            Dictionary<Guid, IEnumerable<ClientList>> clientLists;
+            var clientList = await this.ClientLists.GetAllByUser(id);
 
-            using (var reader = new StreamReader("client-list.json"))
-            {
-                var json = reader.ReadToEnd();
-                clientLists = JsonConvert.DeserializeObject<Dictionary<Guid, IEnumerable<ClientList>>>(json);
-            }
-
-
-            if (!clientLists.ContainsKey(id))
+            if (clientList == null)
             {
                 return this.NotFound();
             }
 
-            return this.Ok(clientLists[id]);
+            return this.Ok(clientList);
         }
 
         [HttpPost("{id}")]
-        public IActionResult SaveUserModules(Guid id, [FromBody] IEnumerable<ClientList> modules)
+        public async Task<IActionResult> SaveUserModules(Guid id, [FromBody] IEnumerable<Client> modules)
         {
-            Dictionary<Guid, IEnumerable<ClientList>> clientLists;
-
-            using (var reader = new StreamReader("client-list.json"))
-            {
-                var json = reader.ReadToEnd();
-                clientLists = JsonConvert.DeserializeObject<Dictionary<Guid, IEnumerable<ClientList>>>(json);
-            }
-
-            if (clientLists.ContainsKey(id))
-            {
-                clientLists[id] = modules;
-            }
-            else
-            {
-                clientLists.Add(id, modules);
-            }
-
-            using (var writer = new StreamWriter("client-list.json"))
-            {
-                var settings =
-                    new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()};
-                var json = JsonConvert.SerializeObject(clientLists, Formatting.Indented, settings);
-                writer.Write(json);
-            }
+            await this.ClientLists.AddOrUpdate(id, modules);
 
             return this.Ok();
         }
