@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Futures.Api.Controllers
 {
     [Produces("application/json")]
-    [Authorize(Policy = "Read")]
     [Route("api/client-lists")]
     public class ClientListController : Controller
     {
@@ -20,6 +19,7 @@ namespace Futures.Api.Controllers
 
         private IClientListRepository ClientLists { get; }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserModules(Guid id)
         {
@@ -34,6 +34,7 @@ namespace Futures.Api.Controllers
             return this.Ok(clientList);
         }
 
+        [Authorize(Policy = "Read")]
         [HttpPost("{id}")]
         public async Task<IActionResult> SaveUserModules(Guid id, [FromBody] IEnumerable<Client> modules)
         {

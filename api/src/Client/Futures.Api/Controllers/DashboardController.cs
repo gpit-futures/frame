@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Futures.Dashboard.Domain.Services.RecentModules.Entities;
+using Futures.Dashboard.Domain.Services.RecentModules.Repositories;
 using Futures.Dashboard.Domain.Services.RecentPatientLists;
-using Futures.Dashboard.Domain.Services.RecentPatientLists.Repositories;
+using Futures.Lists.Domain.Services.ClientLists.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -14,16 +16,16 @@ namespace Futures.Api.Controllers
     [Route("api/dashboard")]
     public class DashboardController : Controller
     {
-        public DashboardController(IRecentPatientListsRepository recentPatientLists, 
-            IRecentPatientListsService recentPatientListsService)
+        public DashboardController(IRecentPatientListsService recentPatientListsService, 
+            IRecentModuleListsRepository recentModules)
         {
-            this.RecentPatientLists = recentPatientLists;
             this.RecentPatientListsService = recentPatientListsService;
+            this.RecentModules = recentModules;
         }
 
-        private IRecentPatientListsRepository RecentPatientLists { get; }
-
         private IRecentPatientListsService RecentPatientListsService { get; }
+
+        private IRecentModuleListsRepository RecentModules { get; }
 
         [HttpGet("recent-patients")]
         public async Task<IActionResult> GetRecentPatients()
@@ -35,7 +37,7 @@ namespace Futures.Api.Controllers
                 return this.BadRequest();
             }
 
-            var recentPatients = await this.RecentPatientLists.GetOneByUser($"{user.Ods}:{user.Username}");
+            var recentPatients = await this.RecentPatientListsService.GetOneByUser($"{user.Ods}:{user.Username}");
 
             if (!string.IsNullOrWhiteSpace(recentPatients?.Patients))
             {
@@ -45,7 +47,7 @@ namespace Futures.Api.Controllers
                 return this.Ok(patients);
             }
 
-            return this.Ok(new List<Dictionary<string, dynamic>>());
+            return this.Ok(new List<object>());
         }
 
         [HttpPost("recent-patients")]
@@ -61,6 +63,49 @@ namespace Futures.Api.Controllers
             var json = JsonConvert.SerializeObject(patients);
 
             await this.RecentPatientListsService.AddOrUpdateUserRecentPatients($"{user.Ods}:{user.Username}", json);
+
+            return this.Ok();
+        }
+
+        [HttpGet("recent-modules")]
+        public async Task<IActionResult> GetRecentModules()
+        {
+            var user = this.GetUser();
+
+            if (string.IsNullOrWhiteSpace(user.Ods) || string.IsNullOrWhiteSpace(user.Username))
+            {
+                return this.BadRequest();
+            }
+
+            var modules = await this.RecentModules.GetOneByUser($"{user.Ods}:{user.Username}");
+
+            if (modules?.Modules != null)
+            {
+                return this.Ok(modules.Modules);
+            }
+
+            return this.Ok(new List<object>());
+        }
+
+        [HttpPost("recent-modules")]
+        public async Task<IActionResult> SaveRecentModules([FromBody] IEnumerable<Client> modules)
+        {
+            var user = this.GetUser();
+
+            if (string.IsNullOrWhiteSpace(user.Ods) || string.IsNullOrWhiteSpace(user.Username))
+            {
+                return this.BadRequest();
+            }
+
+            var recentModules = await this.RecentModules.GetOneByUser($"{user.Ods}:{user.Username}")
+                                ?? new RecentModulesList
+                                {
+                                    User = $"{user.Ods}:{user.Username}"
+                                };
+
+            recentModules.Modules = modules;
+
+            await this.RecentModules.AddOrUpdate(recentModules);
 
             return this.Ok();
         }

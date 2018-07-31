@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Futures.Api.Controllers
 {
     [Produces("application/json")]
-    [Authorize(Policy = "Read")]
+    [AllowAnonymous]
     [Route("api/user-lists")]
     public class UserListController : Controller
     {

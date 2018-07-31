@@ -15,6 +15,11 @@ namespace Futures.Dashboard.Infrastructure.RecentPatientLists
 
         private IRecentPatientListsRepository RecentPatients { get; }
 
+        public Task<RecentPatientList> GetOneByUser(string user)
+        {
+            return this.RecentPatients.GetOneByUser(user);
+        }
+
         public async Task AddOrUpdateUserRecentPatients(string user, string patients)
         {
             var existing = await this.RecentPatients.GetOneByUser(user)

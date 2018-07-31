@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Futures.Domain\Futures.Domain.csproj" />
+    <ProjectReference Include="..\Futures.Lists.Domain\Futures.Lists.Domain.csproj" />
   </ItemGroup>
 
 </Project>
