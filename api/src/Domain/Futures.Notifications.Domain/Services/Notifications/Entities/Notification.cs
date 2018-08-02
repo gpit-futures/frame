@@ -23,5 +23,7 @@ namespace Futures.Notifications.Domain.Services.Notifications.Entities
         public string Type { get; set; }
 
         public DateTime DateCreated { get; set; }
+
+        public string Json { get; set; }
     }
 }

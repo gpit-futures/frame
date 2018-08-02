@@ -33,11 +33,12 @@ namespace Futures.Notifications.Infrastructure.Handlers
                 Ods = message.Destination,
                 System = message.System,
                 // need the patient NHS
-                NhsNumber = obj.Participant.SingleOrDefault(x => x.Actor.Reference.Contains("Patient"))?.Actor.Reference,
+                NhsNumber = obj.Participant.SingleOrDefault(x => x.Actor.Reference.Contains("Patient"))?.Actor?.Identifier?.Value,
                 DateCreated = DateTime.UtcNow,
                 Type = obj.TypeName,
-                Summary = $"{obj.Status}. {obj.Start?.DateTime:g} to {obj.End?.DateTime:g}.",
-                Details = $"{obj.Description}"
+                Summary = $"Appointment {obj.Status}.",
+                Details = $"{obj.Description}",
+                Json = this.ToString()
             };
 
             await this.Notifications.AddOrUpdate(notification);

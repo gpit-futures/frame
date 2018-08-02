@@ -14,14 +14,27 @@ namespace Futures.Infrastructure.MessageQueue
             {
                 AcceptUnknownMembers = true
             });
+
+            this.Serializer = new FhirJsonSerializer();
         }
 
         private FhirJsonParser Parser { get; }
 
+        private FhirJsonSerializer Serializer { get; }
+
+        private T Resource { get; set; }
+
         protected T ParseMessage(IMessage message)
         {
             var body = MessageHandlerBase<T>.IgnoreNulls(message.Body);
-            return this.Parser.Parse<T>(JsonConvert.SerializeObject(body));
+            this.Resource = this.Parser.Parse<T>(JsonConvert.SerializeObject(body));
+
+            return this.Resource;
+        }
+
+        public override string ToString()
+        {
+            return this.Serializer.SerializeToString(this.Resource);
         }
 
         private static IDictionary<string, dynamic> IgnoreNulls(IDictionary<string, dynamic> body)

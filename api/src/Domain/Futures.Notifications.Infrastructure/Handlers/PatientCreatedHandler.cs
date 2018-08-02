@@ -37,7 +37,8 @@ namespace Futures.Notifications.Infrastructure.Handlers
                 DateCreated = DateTime.UtcNow,
                 Type = obj.TypeName,
                 Summary = $"Patient Created: {obj.Identifier[0]?.Value}",
-                Details = $"{usual?.Family}, {string.Join(" ", usual?.Given)} ({string.Join(" ", usual?.Prefix)})"
+                Details = $"{usual?.Family}, {string.Join(" ", usual?.Given)} ({string.Join(" ", usual?.Prefix)})",
+                Json = this.ToString()
             };
 
             await this.Notifications.AddOrUpdate(notification);

@@ -36,8 +36,9 @@ namespace Futures.Notifications.Infrastructure.Handlers
                 NhsNumber = obj.Subject.Identifier.Value,
                 DateCreated = DateTime.UtcNow,
                 Type = obj.TypeName,
-                Summary = $"AMMENDED: {obj.Code.Coding[0].Display}.",
-                Details = $"Value: {value.Value}. Unit: {value.Unit}."
+                Summary = $"AMENDED: {obj.Code.Coding[0].Display}.",
+                Details = $"Value: {value.Value}. Unit: {value.Unit}.",
+                Json = this.ToString()
             };
 
             await this.Notifications.AddOrUpdate(notification);

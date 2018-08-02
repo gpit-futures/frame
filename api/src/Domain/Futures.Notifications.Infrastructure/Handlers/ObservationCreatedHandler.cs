@@ -37,7 +37,8 @@ namespace Futures.Notifications.Infrastructure.Handlers
                 DateCreated = DateTime.UtcNow,
                 Type = obj.TypeName,
                 Summary = $"{obj.Code.Coding[0].Display}.",
-                Details = $"Value: {value.Value}. Unit: {value.Unit}."
+                Details = $"Value: {value.Value}. Unit: {value.Unit}.",
+                Json = this.ToString()
             };
 
             await this.Notifications.AddOrUpdate(notification);

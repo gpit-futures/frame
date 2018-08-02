@@ -40,7 +40,8 @@ namespace Futures.Notifications.Infrastructure.Handlers
                 DateCreated = DateTime.UtcNow,
                 Type = obj.TypeName,
                 Summary = $"{obj.Title}. {obj.Period.Start} to {obj.Period.End}.",
-                Details = $"{string.Join(", ", activity)}"
+                Details = $"{string.Join(", ", activity)}",
+                Json = this.ToString()
             };
 
             await this.Notifications.AddOrUpdate(notification);
