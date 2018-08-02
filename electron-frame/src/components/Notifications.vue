@@ -1,11 +1,12 @@
 <template>
 <v-navigation-drawer
       :clipped="$vuetify.breakpoint.lgAndUp"
-      class="blue darken-3" dark
+      class="notifications-sidebar" light
       temporary
       absolute
       right
       app
+      width="600"
       :value="showDrawer"
       @input="menuClosed"
     >
@@ -28,13 +29,12 @@
               <v-icon @click="deleteNotification(notification)" class="notification-close" >close</v-icon>
             <v-list-tile-action>
               <!-- <v-icon>event_available</v-icon> -->
-              <v-icon v-if="notification.type == 'Appointment'">event_available</v-icon>
-              <v-icon v-else-if="notification.type == 'Observation'">notes</v-icon>
-              <v-icon v-else-if="notification.type == 'Patient'">person_pin</v-icon>
+              <v-icon v-if="notification.type == 'Appointment'">fas fa-calendar-alt</v-icon>
+              <v-icon v-else-if="notification.type == 'Observation'">fas fa-notes-medical</v-icon>
+              <v-icon v-else-if="notification.type == 'Patient'">fas fa-user-plus</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-              <!-- <v-list-tile-title class="notification-title" @click="select(notification)">{{notification.nhsNumber}} - {{notification.type}}</v-list-tile-title> -->
-              <v-list-tile-title class="notification-title" @click="">{{notification.nhsNumber}} - {{notification.type}}</v-list-tile-title>
+              <v-list-tile-title class="notification-title" @click="select(notification)">{{notification.nhsNumber}} - {{notification.type}}</v-list-tile-title>
               <v-list-tile-sub-title>{{notification.system}}</v-list-tile-sub-title>
               <v-list-tile-sub-title>{{notification.dateCreated | readableDate}}</v-list-tile-sub-title>
             </v-list-tile-content>
@@ -45,6 +45,7 @@
                 <v-icon></v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
+              {{notification.summary}}: 
               {{notification.details}}
               </v-list-tile-content>
             </v-list-tile>
@@ -56,12 +57,12 @@
 
       <v-dialog v-model="dialog" max-width="400">
         <v-card>
-          <v-card-text class="has-text-center">Selecting <span class="has-text-weight-bold">SMITH, John. (Mr) - 999 999 9049</span> will change the patient context and you may lose any unsaved work.</v-card-text>
-          <v-card-text class="has-text-center">Would you like to go to 'John Smith'?</v-card-text>
+          <v-card-text class="has-text-center">Selecting <span class="has-text-weight-bold">{{selectedNotification.nhsNumber | nhsNumberFormat}}</span> will change the patient context and you may lose any unsaved work.</v-card-text>
+          <v-card-text class="has-text-center">Would you like to go to <span class="has-text-weight-bold">'{{selectedNotification.nhsNumber | nhsNumberFormat}}'</span>?</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="grey darken-1" flat="flat" @click.native="dialog = false">Cancel</v-btn>
-            <v-btn color="green darken-1" flat="flat" @click.native="dialog = false">Go to John Smith</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click="changePatientContext" @click.native="dialog = false">Go to patient</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -70,19 +71,19 @@
 
 
 <script>
-import SidebarIcon from "./Sidebar-Icon.vue";
 import mutators from "../store/mutators";
 import { NotificationService } from "../services/notification-service";
 import moment from "moment";
+import { SearchService } from "../services/search-service";
+import { triggerPatientContextEvent } from "../utilities/client-manager";
 
 export default {
   name: "sidebar",
-  components: { SidebarIcon },
   data() {
     return {
       // Some mock data to fill the page
       dialog: false,
-      selectedNotification: null
+      selectedNotification: {nhsNumber:"0000000000"}
     };
   },
   computed: {
@@ -102,9 +103,9 @@ export default {
   methods: {
     select(notification) {
       console.log(this.selected);
-      this.dialog = true;
       this.$store.commit(mutators.SET_SHOW_NOTIFICATIONS, false);
-      selectedNotification = notification;
+      this.selectedNotification = notification;
+      this.dialog = true;
     },
     menuClosed(state) {
       console.log("State: " + state);
@@ -114,6 +115,15 @@ export default {
       this.$store.commit(mutators.REMOVE_NOTIFICATION, notification);
       let notificationService = new NotificationService();
       notificationService.removeNotification(this.$store.state.token.access_token, notification.id)
+    },
+    async changePatientContext() {
+      let searchService = new SearchService();
+      if (this.selectedNotification.nhsNumber != null){
+          triggerPatientContextEvent(
+          "patient-context:changed",
+          await searchService.getPatient(this.$store.state.token.access_token,this.selectedNotification.nhsNumber)
+        );
+      }
     }
   },
   filters: {

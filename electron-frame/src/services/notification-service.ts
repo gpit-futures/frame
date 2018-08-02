@@ -14,7 +14,7 @@ export class NotificationService {
     })
       .then(response => response.data);
     }
-
+    console.log(this.notificationList);
     return this.notificationList;
   }
 

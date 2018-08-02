@@ -1,21 +1,13 @@
 // define a class to deal with managing client comunication.
 //   - import vuex (to allow it to manipulate the state - need "clients" to work out which events they are subscribed to)
 //   - work out which clients subscribe to which events and fire the needed event
-import Vue from 'vue';
-import Vuex from 'vuex'
 import mutators from '../store/mutators';
 import store from '../store/store';
-import { init } from 'electron-compile';
 import { Notifier, NotifierType } from "../utilities/notifier";
 import WebSocket from 'ws';
+import { PatientService } from "../services/patient-service";
 
 let modules;
-let clients;
-let testVar;
-let context;
-let patientContextSub;
-let patientEndedSub;
-let pub;
 let notifier;
 let wss;
 
@@ -23,7 +15,6 @@ start();
 // setup connection - and listen for 'patient-context:changed' events
 function start() {
     notifier = new Notifier()
-    context = require('rabbit.js').createContext('amqp://localhost:5672');
     // WEB SOCKETS
     wss = new WebSocket.Server({ port: 1040 })
     wss.on('connection', function (w) {
@@ -48,6 +39,7 @@ function start() {
 
 // adds an event listener to each webview and decodes/routes the event when triggered
 export function setupListeners(webviews) {
+
     modules = webviews
     let module;
     for (module in modules) {
@@ -67,6 +59,7 @@ export function setupListeners(webviews) {
         modules[module][0].reloadIgnoringCache()
         modules[module][0].addEventListener('did-stop-loading', triggerTokenContextEvent)
     }
+    // Turn on/off devtools for each module.
     // modules.Core[0].openDevTools();
     // modules.INR[0].openDevTools();
     // modules.Appointments[0].openDevTools();
@@ -77,8 +70,16 @@ export function setupListeners(webviews) {
 }
 
 // sends patient context change event to subscribed clients
-function triggerPatientContextEvent(eventChannel, patient) {
+export function triggerPatientContextEvent(eventChannel, patient) {
     console.log(patient);
+
+    if (patient) {
+        patient.gp = {"name": store.state.gp};
+        store.commit(mutators.ADD_RECENT_PATIENT, patient);
+        let patientService = new PatientService();
+        patientService.savePatientList(store.state.token.access_token,store.state.recentPatients)
+    }
+
     store.commit(mutators.SET_PATIENT, patient)
     store.commit(mutators.SET_PATIENT_CONTEXT, patient == null ? false : true)
 

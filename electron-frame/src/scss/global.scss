@@ -57,6 +57,16 @@ $main-bg : #dcdde1;
 
 $info-bar-bg: #2e86de;
 
+.sidebar-is-active {
+  background-color: lighten($color: #1976d2, $amount: 1);
+}
+
+.sidebar-items .list__tile__action {
+  justify-content: center!important;
+  -webkit-box-pack: center!important;
+  min-width:48px!important;
+}
+
 html {
   height: 100vh;
   overflow: hidden!important;
@@ -140,6 +150,7 @@ html {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    padding-left: 80px
   }
 
   &-patient-banner {
@@ -234,6 +245,65 @@ html {
   top: 0px;
 }
 
+.search-dropdown .card, 
+.search-dropdown .list {
+  background-color: #E8EDEE!important;
+  color: #000!important;
+}
+
+.search-dropdown .list .list__tile__mask {
+  color: #ffffff;
+}
 .navigation-drawer > .list:not(.list--dense) .list__tile {
-  max-width: 278px;
+  max-width: 586px;
+}
+
+.list__group--active {
+  background-color: lighten($color: lightgrey, $amount: 1);
+}
+
+.slide-fade-enter-active {
+  transition: all .5s ease;
+}
+.slide-fade-leave-active {
+  transition: all .5s ease;
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateY(-50px);
+  opacity: 0;
+}
+
+.patient-banner-main {
+  z-index: 2;
+  background-color: #ED8B00 !important;
+}
+
+.patient-banner-sub {
+  box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.25);
+  -webkit-box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.25);
+  -moz-box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.25);
+  z-index: 1;
+}
+
+.patient-banner-main .card__text,
+.patient-banner-sub .card__text
+ {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.patient-banner-main .patient-name {
+  font-size: 20px;
+}
+
+.text-overflow {
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notifications-sidebar,
+.menu-sidebar {
+  z-index: 7;
 }

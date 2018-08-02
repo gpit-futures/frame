@@ -4,24 +4,40 @@ import axios from "axios";
 export class CatalogueService {
   constructor() { }
 
-  private clientList: IClientList;
+  private clientList: IClientMetadata[];
+  private recentClientList: IClientMetadata[];
 
   async getClients(id: string): Promise<IClientMetadata[]> {
     if (!this.clientList) {
-      const gist = await axios.get("https://api.github.com/gists/808ce2353c0ca20e85968d33d9c76944?client_id=0b5c1b8619519671add3&client_secret=8d460cba9c0febc51eabf627d9936fbb654892a1")
-      .then(response => response.data);
-      
-      const rawUrl = gist.files["client-list.json"].raw_url;
-
-      this.clientList = await axios.get(rawUrl + '?client_id=0b5c1b8619519671add3&client_secret=8d460cba9c0febc51eabf627d9936fbb654892a1')
+      this.clientList = await axios.get('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/client-lists/' + id)
       .then(response => response.data);
     }
-    return this.clientList[id];
+    return this.clientList;
   }
-}
 
-interface IClientList {
-  [key: string]: IClientMetadata[];
+  async updateClientList(token:string, id: string, orderedClientList: IClientMetadata[]) {
+    await axios.post('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/client-lists/' + id ,orderedClientList,{headers: {
+        "Authorization" : 'Bearer ' + token
+      }})
+    .then(response => response.data);
+  }
+
+  async getRecentClients(token:string): Promise<IClientMetadata[]> {
+    if (!this.recentClientList) {
+      this.recentClientList = await axios.get('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/dashboard/recent-modules',{headers: {
+        "Authorization" : 'Bearer ' + token
+      }})
+      .then(response => response.data);
+    }
+    return this.recentClientList;
+  }
+
+  async updateRecentClientList(token:string, recentClientList: IClientMetadata[]) {
+    await axios.post('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/dashboard/recent-modules' ,recentClientList,{headers: {
+        "Authorization" : 'Bearer ' + token
+      }})
+    .then(response => response.data);
+  }
 }
 
 export interface IClientMetadata {

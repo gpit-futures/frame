@@ -6,33 +6,51 @@
       app
       fixed
     >
-      <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
-        <v-toolbar-side-icon @click.stop="toggleDrawer" class="noDrag" v-if="user"></v-toolbar-side-icon>
+
+    <v-flex xs3>
+      <v-toolbar-title style="margin-left: 0px;">
         <v-btn icon @click="home()" class="noDrag">
-          <v-icon dark>home</v-icon>
+          <v-icon dark>fas fa-home</v-icon>
         </v-btn>
         <span class="hidden-sm-and-down noDrag">{{infoBarTitle}} {{selectedTitle}}</span>
       </v-toolbar-title>
-      <v-select
-        flat
-        solo-inverted
-        autocomplete
-        prepend-icon="search"
-        label="Search"
-        class="hidden-sm-and-down noDrag"
-        v-if="user"
-        :items="users"
-        attach
-      ></v-select>
+    </v-flex>
+
+    <v-flex xs6>
+      <v-layout align-center justify-center row fill-height>
+      <v-flex xs8>
+        <v-select
+          solo-inverted
+          autocomplete
+          prepend-icon="search"
+          content-class="search-dropdown"
+          label="Search"
+          class="hidden-sm-and-down noDrag"
+          v-if="user"
+          :items="patients"
+          item-text="Description"
+          item-value="nhsNumber"
+          v-model="selectedPatient"
+          attach
+          :search-input.sync="search"
+          @input="selectPatient"
+        ></v-select>
+      </v-flex>
+      <v-flex xs4>
+        <v-btn round @click="clearPatient()" class="noDrag" v-if="user" :disabled="!patientContext">
+          <v-icon left dark>fas fa-user</v-icon> <span style="max-width:165px;width:165px;" class="text-overflow">{{patient}}</span> <v-icon right dark>close</v-icon>
+        </v-btn>
+      </v-flex>
+      </v-layout>
       <v-spacer v-if="!user"></v-spacer>
-      <v-btn icon v-if="user">
-        <v-icon dark></v-icon>
-      </v-btn>
+    </v-flex>
+
+    <v-flex xs3 style="text-align: right;">
       <v-btn icon @click="toggleNotifications()" class="noDrag" v-if="user">
-        <v-icon dark>notification_important</v-icon>
+        <v-icon dark>fas fa-bell</v-icon>
       </v-btn>
       <v-menu offset-y class="noDrag" v-if="user">
-        <v-btn icon slot="activator"><v-icon dark>account_circle</v-icon></v-btn>
+        <v-btn icon slot="activator"><v-icon dark>fas fa-user</v-icon></v-btn>
         <v-list>
           <v-list-tile @click="logout()">
             <v-list-tile-title>Logout</v-list-tile-title>
@@ -43,44 +61,38 @@
         <v-icon dark>minimize</v-icon>
       </v-btn>
       <v-btn icon @click="max()" class="noDrag">
-        <v-icon dark>open_in_new</v-icon>
+        <v-icon dark>{{icon}}</v-icon>
       </v-btn>
       <v-btn icon @click="close()" class="noDrag">
         <v-icon dark>close</v-icon>
       </v-btn>
+    </v-flex>
     </v-toolbar>
 </template>
 
 <script>
 import moment from "moment";
 import mutators from "../store/mutators";
+import { SearchService } from "../services/search-service";
 import { remote } from "electron";
+import { triggerPatientContextEvent } from "../utilities/client-manager";
 
 export default {
   name: "info-bar",
   components: {},
   data() {
     return {
-      // Some mock data to fill the page
       infoBarTitle: "PCaaP: ",
-      users: [
-        "Aengus O'Connor - 19-Mar-1938 - Male - 999 999 9024",
-        "Aiko Haney - 29-Aug-1954 - Female - 999 999 9088",
-        "Alexis Greer - 23-Apr-1941 - Female - 999 999 9097",
-        "Aretha Hobbs - 29-Jan-1923 - Male - 999 999 9059",
-        "Blair Wells - 03-Mar-1969 - Female - 999 999 9007",
-        "Bryar Hendricks - 17-Sep-1976 - Female - 999 999 9038",
-        "Carol Griffith - 03-Aug-1927 - Male - 999 999 9049",
-        "Cassandra Workman - 05-Apr-1948 - Male - 999 999 9037",
-        "Cian Magee - 26-Jul-1938 - Male - 999 999 9008",
-        "Clio Cooke - 10-Apr-1964 - Female - 999 999 9087"
-      ]
+      selectedPatient: null,
+      search: null,
+      patients: [],
+      icon: "fullscreen_exit"
     };
   },
   methods: {
     logout() {
       this.$store.commit(mutators.LOGOUT);
-      this.$root.$emit('notifications')
+      this.$root.$emit("notifications");
       this.$router.push({ name: "Login" });
     },
     toggleDrawer() {
@@ -89,7 +101,6 @@ export default {
       } else {
         this.$store.commit(mutators.SET_SHOW_DRAWER, true);
       }
-      console.log(this.$store.state.showDrawer);
     },
     toggleNotifications() {
       if (this.$store.state.showNotifications) {
@@ -97,7 +108,6 @@ export default {
       } else {
         this.$store.commit(mutators.SET_SHOW_NOTIFICATIONS, true);
       }
-      console.log(this.$store.state.showNotifications);
     },
     min() {
       if (remote.getCurrentWindow().isMinimized()) {
@@ -108,9 +118,11 @@ export default {
     },
     max() {
       if (remote.getCurrentWindow().isMaximized()) {
-        remote.getCurrentWindow().unmaximize();
+        remote.getCurrentWindow().setSize(1600, 800);
+        this.icon = "fullscreen";
       } else {
         remote.getCurrentWindow().maximize();
+        this.icon = "fullscreen_exit";
       }
     },
     close() {
@@ -118,7 +130,43 @@ export default {
     },
     home() {
       this.$store.commit(mutators.SET_SHOW_DASHBOARD, true);
-      this.$store.commit(mutators.SET_SELECTED_MODULE_TITLE, "Home")
+      this.$store.commit(mutators.SET_SELECTED_MODULE, null);
+      this.$store.commit(mutators.SET_SELECTED_MODULE_TITLE, "Home");
+    },
+    createPatientList(patientList) {
+      return patientList.map(entry => {
+        const Description =
+          entry.name +
+          " - " +
+          moment.utc(entry.dateOfBirth).format('DD-MMM-YYYY') +
+          " - " +
+          entry.gender +
+          " - " +
+          this.nhsNumberFormat(entry.nhsNumber);
+        return Object.assign({}, entry, { Description });
+      });
+    },
+    async selectPatient() {
+      let searchService = new SearchService();
+      if (this.selectedPatient != null) {
+          triggerPatientContextEvent(
+          "patient-context:changed",
+          await searchService.getPatient(this.token,this.selectedPatient)
+        );
+      } else {
+        this.clearPatient();
+      }
+    },
+    clearPatient() {
+      this.selectedPatient = null;
+      triggerPatientContextEvent("patient-context:ended", null);
+    },
+    nhsNumberFormat(nhsNumber) {
+      const tidy = nhsNumber.trim();
+      if (tidy.length < 10) {
+          return "UNKNOWN";
+        }
+      return `${tidy.substr(0, 3)} ${tidy.substr(3, 3)} ${tidy.substr(6)}`;
     }
   },
   computed: {
@@ -131,10 +179,30 @@ export default {
     user() {
       return this.$store.state.user;
     },
+    patientContext() {
+      return this.$store.state.patientContext;
+    },
     practitionerName() {
       return (
         this.user.title + " " + this.user.firstName + " " + this.user.lastName
       );
+    },
+    token() {
+      return this.$store.state.token.access_token
+    },
+    patient() {
+      if (this.$store.state.patient) {
+        return this.$store.state.patient.name[0].family + ", " + this.$store.state.patient.name[0].given[0] +" (" + this.$store.state.patient.name[0].prefix[0] + ")"
+      } else {
+        return "No Patient Selected"
+      }
+    }
+  },
+  watch: {
+    async search(val) {
+      let searchService = new SearchService();
+      let searchResult = await searchService.getSearchResults(this.token,val);
+      this.patients = this.createPatientList(searchResult.patients);
     }
   }
 };

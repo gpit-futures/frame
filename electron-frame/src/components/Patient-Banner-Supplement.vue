@@ -4,7 +4,9 @@
     <v-layout row>
       <v-flex xs3 class="white black--text">
         <v-card v-if="expanded" dark tile flat xs9 class="white black--text">
-          <v-card-text>Address: <span class="has-text-weight-bold">{{patient.address[0].line[0]}} {{patient.address[0].line[1]}} {{patient.address[0].city}} {{patient.address[0].district}} {{patient.address[0].postalCode}}</span></v-card-text>
+          <v-card-text class="text-overflow">
+            Address: <span class="has-text-weight-bold">{{patient.address[0].line[0]}} {{patient.address[0].line[1]}} {{patient.address[0].city}} {{patient.address[0].district}} {{patient.address[0].postalCode}}</span>
+          </v-card-text>
         </v-card>
         <v-card v-else dark tile flat xs9 class="white black--text">
           <v-card-text>
@@ -19,11 +21,11 @@
       </v-flex>
       <v-flex xs9 class="white black--text">
         <v-card v-if="expanded" dark tile flat xs3 class="white black--text">
-          <v-card-text>Contact: <span class="has-text-weight-bold">{{patient.telecom[0].value}}</span></v-card-text>
+          <v-card-text>Contact: <span class="has-text-weight-bold">{{patient.telecom[0].value}}</span><v-icon light right>keyboard_arrow_down</v-icon></v-card-text>
         </v-card>
         <v-card v-else dark tile flat xs3 class="white black--text">
           <v-card-text>
-            <div>Contact: </div>
+            <div>Contact: <v-icon light right>keyboard_arrow_up</v-icon></div>
             <div class="has-text-weight-bold">{{patient.telecom[0].value}}</div>
           </v-card-text>
         </v-card>

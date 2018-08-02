@@ -16,7 +16,10 @@ export default new Vuex.Store({
         showDrawer: false,
         showNotifications: false,
         showDashboard: true,
-        notifications: []
+        notifications: [],
+        recentPatients: [],
+        recentModules: [],
+        gp: null
 
     },
     mutations: {
@@ -73,6 +76,8 @@ export default new Vuex.Store({
                 "publisher":"Core GP Sys",
                 "sourceUrl":"http://localhost:3101/#/",
                 "eventsOfInterest":[  
+                    "patient-context:changed",
+                    "patient-context:ended"
                 ]
              }
              let localInr = {  
@@ -151,6 +156,35 @@ export default new Vuex.Store({
             if (!null) {
                 state.notifications.splice(state.notifications.indexOf(notification),1)
             }
+        },
+        [mutators.SET_RECENT_PATIENT](state, patients) {
+            state.recentPatients = patients
+        },
+        [mutators.ADD_RECENT_PATIENT](state, patient) {
+            if (state.recentPatients && state.recentPatients.find( recentPatient => recentPatient.id === patient.id ) === undefined) {
+                if (state.recentPatients.length == 6) {
+                    state.recentPatients.pop();
+                    state.recentPatients.unshift(patient);
+                } else {
+                    state.recentPatients.unshift(patient);
+                }
+            }
+        },
+        [mutators.SET_RECENT_MODULE](state, modules) {
+            state.recentModules = modules
+        },
+        [mutators.ADD_RECENT_MODULE](state, module) {
+            if (state.recentModules && state.recentModules.find( recentModule => recentModule.id === module.id ) === undefined) {
+                if (state.recentModules.length == 6) {
+                    state.recentModules.pop();
+                    state.recentModules.unshift(module);
+                } else {
+                    state.recentModules.unshift(module);
+                }
+            }
+        },
+        [mutators.SET_GP](state, gp) {
+            state.gp = gp
         },
     },
     getters: {

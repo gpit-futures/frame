@@ -16,7 +16,6 @@ function init() {
   // !CAREFUL! do not expose any functionality or APIs that could compromise the
   // user's computer. E.g. don't directly expose core Electron (even IPC) or node.js modules.
   window.Bridge = {
-    setPatientContext,
     sendWarningToFrame
   };
 }

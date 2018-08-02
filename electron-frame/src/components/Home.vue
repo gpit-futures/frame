@@ -4,11 +4,16 @@
     <!-- sidebar component -->
     <div class="dw-main">
       <!-- patient banner component -->
-      <patient-banner v-if="patientContext"></patient-banner>
+      <transition name="slide-fade">
+      <patient-banner v-if="patientContext"
+      class="patient-banner-main"></patient-banner>
         <!-- patient banner suplement component -->
+      </transition>
+      <transition name="slide-fade">
       <patient-banner-supplement v-if="patientContext"
-        class=""
+        class="patient-banner-sub"
         :expanded=true></patient-banner-supplement>
+      </transition>
         <!-- frame component -->
       <frames class="dw-frames"></frames>
     </div>

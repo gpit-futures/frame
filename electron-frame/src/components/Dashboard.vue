@@ -1,29 +1,50 @@
 <template>
 <v-content>
-      <v-container fluid fill-height>
-        <v-layout flex justify-center>
-          <v-flex xs6 sm6 align-content-center>
-            <v-card color="white" class="black--text" d-flex>
-              <v-card-title primary-title>
-                <div style="width:100%;">
-                  <h3 class="headline mb-0">Welcome</h3>
-                  <v-data-table
-                    :headers="headers"
-                    :items="users"
-                    hide-actions
-                    class="elevation-1">
-                    <template slot="items" slot-scope="props">
-                    <td>{{ props.item.name }}</td>
-                    <td class="text-xs-left">{{ props.item.dob }}</td>
-                    <td class="text-xs-left">{{ props.item.gender }}</td>
-                    <td class="text-xs-left">{{ props.item.nhsNumber }}</td>
-                    </template>
-                </v-data-table>
-                </div>
-              </v-card-title>
-              <v-card-actions>
-              </v-card-actions>
-            </v-card>
+      <v-container fluid>
+        <v-layout flex justify-center wrap row>
+          <v-flex xs12>
+              <v-card xs6 color="white" class="black--text" align-content-center d-flex>
+                <v-card-title primary-title>
+                  <div style="width:100%;">
+                    <v-data-table
+                      :headers="headers"
+                      :items="recentPatients"
+                      hide-actions
+                      class="elevation-1">
+                      <template slot="items" slot-scope="props">
+                        <tr @click="selectPatient(props.item)">
+                          <td><span class="is-uppercase">{{props.item.name[0].family}}</span>, {{props.item.name[0].given[0]}} ({{props.item.name[0].prefix[0]}})</td>
+                          <td class="text-xs-left">{{ props.item.birthDate | dateTimeFormat}}</td>
+                          <td class="text-xs-left">{{ props.item.gender }}</td>
+                          <td class="text-xs-left">{{ props.item.identifier[0].value | nhsNumberFormat}}</td>
+                          <td class="text-xs-left"><v-btn icon><v-icon>keyboard_arrow_right</v-icon></v-btn></td>
+                        </tr>
+                      </template>
+                  </v-data-table>
+                  </div>
+                </v-card-title>
+                <v-card-actions>
+                </v-card-actions>
+              </v-card>
+          </v-flex>
+          <v-flex xs12>Recent Modules:</v-flex>
+          <v-flex xs2 v-for="module of recentModules" :key="module.id">
+              <v-card color="white" class="black--text" hover d-flex @click="selectModule(module)">
+                <v-card-title primary-title @click="selectModule(module)">
+                  <v-icon v-if="module.applicationName == 'Core'">fas fa-globe</v-icon>
+                  <v-icon v-else-if="module.applicationName == 'INR'">fas fa-syringe</v-icon>
+                  <v-icon v-else-if="module.applicationName == 'Appointments'">fas fa-calendar-alt</v-icon>
+                  <v-icon v-else-if="module.applicationName == 'Document Management'">fas fa-folder-open</v-icon>
+                  <v-icon v-else-if="module.applicationName == 'Prescribing'">fas fa-prescription-bottle-alt</v-icon>
+                  <v-icon v-else-if="module.applicationName == 'Workflow'">fas fa-list-alt</v-icon>
+                  <v-icon v-else-if="module.applicationName == 'Telecare'">fas fa-comments</v-icon>
+                  <v-icon v-else-if="module.applicationName == 'Caseload Management'">fas fa-briefcase-medical</v-icon>
+                  <v-icon v-else-if="module.applicationName == 'Stock Management'">fas fa-box-open</v-icon>
+                   {{module.applicationName}}
+                </v-card-title>
+                <v-card-actions>
+                </v-card-actions>
+              </v-card>
           </v-flex>
         </v-layout>
       </v-container>
@@ -31,68 +52,67 @@
 </template>
 
 <script>
+import { triggerPatientContextEvent } from "../utilities/client-manager";
+import { PatientService } from "../services/patient-service";
+import { CatalogueService } from "../services/catalogue-service";
+import mutators from "../store/mutators";
+
 export default {
   name: "dashboard",
   components: {},
   data() {
     return {
       // Some mock data to fill the page
-        headers: [
-          {
-            text: 'Recent Patients',
-            align: 'left',
-            sortable: false,
-            value: 'name'
-          },
-          { text: 'DOB', value: 'dob' },
-          { text: 'Gender', value: 'gender' },
-          { text: 'NHS Number', value: 'nhsNumber' },
-        ],
-        users: [
-          {
-            value: false,
-            name: 'Aiko Haney',
-            dob: '29-Aug-1954',
-            gender: 'Female',
-            nhsNumber: '999 999 9024',
-          },
-          {
-            value: false,
-            name: 'Blair Wells',
-            dob: '03-Mar-1969',
-            gender: 'Female',
-            nhsNumber: '999 999 9007',
-          },
-          {
-            value: false,
-            name: 'Clio Cooke',
-            dob: '10-Apr-1964',
-            gender: 'Female',
-            nhsNumber: '999 999 9087',
-          },
-          {
-            value: false,
-            name: 'Bryar Hendricks',
-            dob: '17-Sep-1976',
-            gender: 'Female',
-            nhsNumber: '999 999 9038',
-          },
-          {
-            value: false,
-            name: 'Carol Griffith',
-            dob: '03-Aug-1927',
-            gender: 'Male',
-            nhsNumber: '999 999 9049',
-          },
-          {
-            value: false,
-            name: 'Alexis Greer',
-            dob: '23-Apr-1941',
-            gender: 'Female',
-            nhsNumber: '999 999 9097',
-          }
-          ]
+      headers: [
+        {
+          text: "Recent Patients",
+          align: "left",
+          sortable: true,
+          value: "name"
+        },
+        { text: "DOB", value: "birthDate", sortable: true},
+        { text: "Gender", value: "gender", sortable: true },
+        { text: "NHS Number", value: "identifier", sortable: true },
+        { text: "Actions", value: "actions", sortable: true }
+      ]
     };
+  },
+  methods: {
+    selectPatient(patient) {
+      triggerPatientContextEvent("patient-context:changed", patient);
+    },
+    selectModule(client) {
+      this.$store.commit(mutators.SET_SHOW_DASHBOARD, false);
+      this.$store.commit(mutators.SET_SELECTED_MODULE, client.id);
+      this.$store.commit(
+        mutators.SET_SELECTED_MODULE_TITLE,
+        client.applicationName
+      );
+
+      this.$store.commit(mutators.ADD_RECENT_MODULE, client);
+      let catalogueService = new CatalogueService();
+      catalogueService.updateRecentClientList(this.token, this.$store.state.recentModules)
+    },
+  },
+  computed: {
+    recentPatients() {
+      return this.$store.state.recentPatients;
+    },
+    recentModules() {
+      return this.$store.state.recentModules;
+    },
+    token() {
+      return this.$store.state.token.access_token
+    }
+  },
+  async mounted() {
+    let patientService = new PatientService();
+    let patientList = await patientService.getPatientList(this.token)
+    this.$store.commit(mutators.SET_RECENT_PATIENT, patientList);
+
+    let catalogueService = new CatalogueService();
+    let recentModuleList = await catalogueService.getRecentClients(this.token)
+    this.$store.commit(mutators.SET_RECENT_MODULE, recentModuleList);
   }
 };
 </script>

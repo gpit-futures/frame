@@ -19,9 +19,23 @@
   import router from './router';
   import store from './store/store'
   import vueify from 'vueify-insert-css'
+  import moment from "moment"
 
   Vue.use(Vuex)
   Vue.use(Vuetify)
+
+  // define global filters
+  Vue.filter('nhsNumberFormat', function (nhsNumber) {
+    const tidy = nhsNumber.trim();
+    if (tidy.length < 10) {
+        return "UNKNOWN";
+      }
+    return `${tidy.substr(0, 3)} ${tidy.substr(3, 3)} ${tidy.substr(6)}`;
+  })
+
+  Vue.filter('dateTimeFormat', function (date) {
+    return moment(date).format("DD-MMM-YYYY");
+  })
 
   const app = new Vue({
   el: '#app',

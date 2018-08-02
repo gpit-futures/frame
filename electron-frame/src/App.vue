@@ -18,13 +18,15 @@
 import InfoBar from "./components/Info-Bar";
 import Sidebar from "./components/Sidebar.vue";
 import Notifications from "./components/Notifications.vue";
+import draggable from 'vuedraggable'
 
 export default {
   name: "App",
   components: {
     InfoBar,
     Sidebar,
-    Notifications
+    Notifications,
+    draggable
   },
   data() {
     return {

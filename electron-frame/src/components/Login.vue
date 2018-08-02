@@ -4,11 +4,11 @@
         <v-layout flex align-center justify-center>
           <v-flex xs2 sm2 align-content-center>
             <v-card color="white" class="black--text" d-flex>
+              <v-form>
               <v-card-title primary-title>
                 <div style="width:100%;">
                   <h3 class="headline mb-0">Welcome</h3>
                   <div>Enter your credentials below to log in</div>
-                <form>
                 <v-select
                   v-model="user"
                   :items="loginUsers"
@@ -23,13 +23,14 @@
                   :type="'password'"
                   label="Password"
                   required
+                  v-on:keyup.enter="login()"
                 ></v-text-field>
-                </form>
                 </div>
               </v-card-title>
               <v-card-actions>
                 <v-btn flat color="orange" @click="login()">Login</v-btn>
               </v-card-actions>
+              </v-form>
             </v-card>
           </v-flex>
         </v-layout>
@@ -43,6 +44,7 @@ import { NotificationService } from "../services/notification-service";
 import { Notifier, NotifierType } from "../utilities/notifier";
 import mutators from "../store/mutators";
 import axios from "axios";
+import { HubConnectionBuilder } from '@aspnet/signalr'
 
 export default {
   name: "login",
@@ -84,6 +86,7 @@ export default {
           3000
         );
         this.$store.commit(mutators.SET_USER, this.user);
+        this.$store.commit(mutators.SET_GP, this.user.title + " " + this.user.firstName + " " + this.user.lastName);
         this.$store.commit(mutators.SET_SHOW_DRAWER, true);
         this.$router.push({ name: "Home", params: { user: this.user } });
         // this.$router.push({ name: "Dashboard", params: { user: this.user } });
