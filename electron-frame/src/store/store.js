@@ -138,7 +138,7 @@ export default new Vuex.Store({
             state.patient = null,
             state.patientContext = false,
             state.selected = null,
-            state.selectedTitle = null,
+            state.selectedTitle = "Login",
             state.clients = [],
             state.showDashboard = true
         },

@@ -48,6 +48,22 @@
           </v-flex>
         </v-layout>
       </v-container>
+
+      <v-dialog v-model="dialog" max-width="400">
+        <v-card>
+          <v-card-title class="blue darken-4 title white--text">Patient Access Disclaimer</v-card-title>
+          <v-divider></v-divider>
+          <v-card-text class="has-text-center">Selecting <span class="has-text-weight-bold">{{patient}}</span> will change the patient context and you may lose any unsaved work.
+          Please ensure that you have the correct permission to view these records before proceeding</v-card-text>
+          <v-card-text class="has-text-center">Would you like to go to <span class="has-text-weight-bold">'{{patient}}'</span>?</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="grey darken-1" flat="flat" @click.native="dialog = false">Cancel</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click="triggerPatientContext" @click.native="dialog = false">Go to patient</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
     </v-content>
 </template>
 
@@ -74,12 +90,18 @@ export default {
         { text: "Gender", value: "gender", sortable: true },
         { text: "NHS Number", value: "identifier", sortable: true },
         { text: "Actions", value: "actions", sortable: true }
-      ]
+      ],
+      dialog: false,
+      selectedPatient: null
     };
   },
   methods: {
     selectPatient(patient) {
-      triggerPatientContextEvent("patient-context:changed", patient);
+      this.dialog = true
+      this.selectedPatient = patient
+    },
+    triggerPatientContext() {
+      triggerPatientContextEvent("patient-context:changed", this.selectedPatient);
     },
     selectModule(client) {
       this.$store.commit(mutators.SET_SHOW_DASHBOARD, false);
@@ -103,6 +125,13 @@ export default {
     },
     token() {
       return this.$store.state.token.access_token
+    },
+    patient() {
+      if (this.selectedPatient) {
+        return this.selectedPatient.name[0].given[0] + " " + this.selectedPatient.name[0].family
+      } else {
+        return "No Patient Selected"
+      }
     }
   },
   async mounted() {

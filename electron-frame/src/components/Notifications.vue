@@ -57,7 +57,10 @@
 
       <v-dialog v-model="dialog" max-width="400">
         <v-card>
-          <v-card-text class="has-text-center">Selecting <span class="has-text-weight-bold">{{selectedNotification.nhsNumber | nhsNumberFormat}}</span> will change the patient context and you may lose any unsaved work.</v-card-text>
+          <v-card-title class="blue darken-4 title white--text">Patient Access Disclaimer</v-card-title>
+          <v-divider></v-divider>
+          <v-card-text class="has-text-center">Selecting <span class="has-text-weight-bold">{{selectedNotification.nhsNumber | nhsNumberFormat}}</span> will change the patient context and you may lose any unsaved work.
+          Please ensure that you have the correct permission to view these records before proceeding</v-card-text>
           <v-card-text class="has-text-center">Would you like to go to <span class="has-text-weight-bold">'{{selectedNotification.nhsNumber | nhsNumberFormat}}'</span>?</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>

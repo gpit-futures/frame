@@ -29,7 +29,6 @@
           v-if="user"
           :items="patients"
           item-text="Description"
-          item-value="nhsNumber"
           v-model="selectedPatient"
           attach
           :search-input.sync="search"
@@ -67,6 +66,22 @@
         <v-icon dark>close</v-icon>
       </v-btn>
     </v-flex>
+
+    <v-dialog v-model="dialog" max-width="400">
+        <v-card>
+          <v-card-title class="blue darken-4 title white--text">Patient Access Disclaimer</v-card-title>
+          <v-divider></v-divider>
+          <v-card-text class="has-text-center">Selecting <span class="has-text-weight-bold">{{patientName}}</span> will change the patient context and you may lose any unsaved work.
+          Please ensure that you have the correct permission to view these records before proceeding</v-card-text>
+          <v-card-text class="has-text-center">Would you like to go to <span class="has-text-weight-bold">'{{patientName}}'</span>?</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="grey darken-1" flat="flat" @click.native="dialog = false, selectedPatient = null">Cancel</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click="triggerPatientContext" @click.native="dialog = false">Go to patient</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
     </v-toolbar>
 </template>
 
@@ -86,7 +101,8 @@ export default {
       selectedPatient: null,
       search: null,
       patients: [],
-      icon: "fullscreen_exit"
+      icon: "fullscreen_exit",
+      dialog: false
     };
   },
   methods: {
@@ -142,16 +158,22 @@ export default {
           " - " +
           entry.gender +
           " - " +
+          // entry.nhsNumber;
           this.nhsNumberFormat(entry.nhsNumber);
         return Object.assign({}, entry, { Description });
       });
     },
-    async selectPatient() {
+    selectPatient() {
+      if (this.selectedPatient != null) {
+        this.dialog = true
+      }
+    },
+    async triggerPatientContext() {
       let searchService = new SearchService();
       if (this.selectedPatient != null) {
           triggerPatientContextEvent(
           "patient-context:changed",
-          await searchService.getPatient(this.token,this.selectedPatient)
+          await searchService.getPatient(this.token,this.selectedPatient.nhsNumber)
         );
       } else {
         this.clearPatient();
@@ -196,13 +218,29 @@ export default {
       } else {
         return "No Patient Selected"
       }
+    },
+    patientName() {
+      console.log(this.selectedPatient)
+      if (this.selectedPatient) {
+        return this.selectedPatient.name
+      } else {
+        return "No Patient Selected"
+      }
     }
   },
   watch: {
     async search(val) {
+
+      // Check if search value is nhsNumber
       let searchService = new SearchService();
-      let searchResult = await searchService.getSearchResults(this.token,val);
-      this.patients = this.createPatientList(searchResult.patients);
+      var re = new RegExp(/\d{3}\s{1}\d{3}\s{1}\d{4}/g);
+      if(re.test(val)) {
+        let searchResult = await searchService.getSearchResults(this.token,val.replace(/\s/g, ''));
+        this.patients = this.createPatientList(searchResult.patients);
+      } else {
+        let searchResult = await searchService.getSearchResults(this.token,val);
+        this.patients = this.createPatientList(searchResult.patients);
+      }
     }
   }
 };
