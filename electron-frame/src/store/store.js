@@ -10,7 +10,7 @@ export default new Vuex.Store({
         patient: null,
         patientContext: false,
         selected: null,
-        selectedTitle: null,
+        selectedTitle: "Login",
         clients: [],
         token: null,
         showDrawer: false,

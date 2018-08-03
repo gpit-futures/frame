@@ -150,9 +150,10 @@ export default {
       this.$store.commit(mutators.SET_SELECTED_MODULE_TITLE, "Home");
     },
     createPatientList(patientList) {
+      console.log(patientList);
       return patientList.map(entry => {
         const Description =
-          entry.name +
+          entry.title + " " + entry.firstName + " " + entry.lastName +
           " - " +
           moment.utc(entry.dateOfBirth).format('DD-MMM-YYYY') +
           " - " +
@@ -222,7 +223,7 @@ export default {
     patientName() {
       console.log(this.selectedPatient)
       if (this.selectedPatient) {
-        return this.selectedPatient.name
+        return this.selectedPatient.lastName + ", " + this.selectedPatient.firstName +" (" + this.selectedPatient.title + ")"
       } else {
         return "No Patient Selected"
       }

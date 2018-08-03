@@ -2,9 +2,11 @@
 <v-content>
       <v-container fluid>
         <v-layout flex justify-center wrap row>
-          <v-flex xs12>
-              <v-card xs6 color="white" class="black--text" align-content-center d-flex>
-                <v-card-title primary-title>
+          <v-flex xs2></v-flex>
+          <v-flex xs8 class="headline widget-title"><v-icon>fas fa-history</v-icon> Recent Patients:</v-flex>
+          <v-flex xs2></v-flex>
+          <v-flex xs2></v-flex>
+          <v-flex xs8>
                   <div style="width:100%;">
                     <v-data-table
                       :headers="headers"
@@ -22,30 +24,57 @@
                       </template>
                   </v-data-table>
                   </div>
-                </v-card-title>
-                <v-card-actions>
-                </v-card-actions>
-              </v-card>
           </v-flex>
-          <v-flex xs12>Recent Modules:</v-flex>
-          <v-flex xs2 v-for="module of recentModules" :key="module.id">
-              <v-card color="white" class="black--text" hover d-flex @click="selectModule(module)">
-                <v-card-title primary-title @click="selectModule(module)">
-                  <v-icon v-if="module.applicationName == 'Core'">fas fa-globe</v-icon>
-                  <v-icon v-else-if="module.applicationName == 'INR'">fas fa-syringe</v-icon>
-                  <v-icon v-else-if="module.applicationName == 'Appointments'">fas fa-calendar-alt</v-icon>
-                  <v-icon v-else-if="module.applicationName == 'Document Management'">fas fa-folder-open</v-icon>
-                  <v-icon v-else-if="module.applicationName == 'Prescribing'">fas fa-prescription-bottle-alt</v-icon>
-                  <v-icon v-else-if="module.applicationName == 'Workflow'">fas fa-list-alt</v-icon>
-                  <v-icon v-else-if="module.applicationName == 'Telecare'">fas fa-comments</v-icon>
-                  <v-icon v-else-if="module.applicationName == 'Caseload Management'">fas fa-briefcase-medical</v-icon>
-                  <v-icon v-else-if="module.applicationName == 'Stock Management'">fas fa-box-open</v-icon>
-                   {{module.applicationName}}
-                </v-card-title>
-                <v-card-actions>
-                </v-card-actions>
+          <v-flex xs2></v-flex>
+          <v-flex xs2></v-flex>
+          <v-flex xs8 class="headline widget-title"><v-icon>fas fa-retweet</v-icon> Most Visited:</v-flex>
+          <v-flex xs2></v-flex>
+          <v-flex xs2></v-flex>
+          <v-flex xs8>
+            <v-layout flex justify-center wrap row>
+            <v-flex xs4 v-for="module of recentModules" :key="module.id">
+              <v-card color="white" class="black--text" width="300" style="margin: 5px auto;" hover>
+              <v-layout>
+                <v-flex xs3 class="text-md-center red-module" v-if="module.applicationName == 'Core'">
+                  <v-icon x-large style="margin: 13px auto;">fas fa-globe</v-icon>
+                </v-flex>
+                <v-flex xs3 class="text-md-center yellow-module" v-if="module.applicationName == 'INR'">
+                  <v-icon x-large style="margin: 13px auto;">fas fa-syringe</v-icon>
+                </v-flex>
+                <v-flex xs3 class="text-md-center green-module" v-if="module.applicationName == 'Appointments'">
+                  <v-icon x-large style="margin: 13px auto;">fas fa-calendar-alt</v-icon>
+                </v-flex>
+                <v-flex xs3 class="text-md-center purple-module" v-if="module.applicationName == 'Document Management'">
+                  <v-icon x-large style="margin: 13px auto;">fas fa-folder-open</v-icon>
+                </v-flex>
+                <v-flex xs3 class="text-md-center orange-module" v-if="module.applicationName == 'Prescribing'">
+                  <v-icon x-large style="margin: 13px auto;">fas fa-prescription-bottle-alt</v-icon>
+                </v-flex>
+                <v-flex xs3 class="text-md-center blue-module" v-if="module.applicationName == 'Workflow'">
+                  <v-icon x-large style="margin: 13px auto;">fas fa-list-alt</v-icon>
+                </v-flex>
+                <v-flex xs3 class="text-md-center light-blue-module" v-if="module.applicationName == 'Telecare'">
+                  <v-icon x-large style="margin: 13px auto;">fas fa-comments</v-icon>
+                </v-flex>
+                <v-flex xs3 class="text-md-center lighter-blue-module" v-if="module.applicationName == 'Caseload Management'">
+                  <v-icon x-large style="margin: 13px auto;">fas fa-box-briefcase-medical</v-icon>
+                </v-flex>
+                <v-flex xs3 class="text-md-center pale-blue-module" v-if="module.applicationName == 'Stock Management'">
+                  <v-icon x-large style="margin: 13px auto;">fas fa-box-open</v-icon>
+                </v-flex>
+                <v-flex xs9>
+                  <v-card-title primary-title @click="selectModule(module)">
+                    <div class="text-overflow">
+                      <div class="headline text-overflow">{{module.applicationName}}</div>
+                    </div>
+                  </v-card-title>
+                </v-flex>
+              </v-layout>
               </v-card>
+            </v-flex>
+            </v-layout>
           </v-flex>
+          <v-flex xs2></v-flex>
         </v-layout>
       </v-container>
 
@@ -86,7 +115,7 @@ export default {
           sortable: true,
           value: "name"
         },
-        { text: "DOB", value: "birthDate", sortable: true},
+        { text: "DOB", value: "birthDate", sortable: true },
         { text: "Gender", value: "gender", sortable: true },
         { text: "NHS Number", value: "identifier", sortable: true },
         { text: "Actions", value: "actions", sortable: true }
@@ -97,11 +126,14 @@ export default {
   },
   methods: {
     selectPatient(patient) {
-      this.dialog = true
-      this.selectedPatient = patient
+      this.dialog = true;
+      this.selectedPatient = patient;
     },
     triggerPatientContext() {
-      triggerPatientContextEvent("patient-context:changed", this.selectedPatient);
+      triggerPatientContextEvent(
+        "patient-context:changed",
+        this.selectedPatient
+      );
     },
     selectModule(client) {
       this.$store.commit(mutators.SET_SHOW_DASHBOARD, false);
@@ -113,8 +145,11 @@ export default {
 
       this.$store.commit(mutators.ADD_RECENT_MODULE, client);
       let catalogueService = new CatalogueService();
-      catalogueService.updateRecentClientList(this.token, this.$store.state.recentModules)
-    },
+      catalogueService.updateRecentClientList(
+        this.token,
+        this.$store.state.recentModules
+      );
+    }
   },
   computed: {
     recentPatients() {
@@ -124,23 +159,30 @@ export default {
       return this.$store.state.recentModules;
     },
     token() {
-      return this.$store.state.token.access_token
+      return this.$store.state.token.access_token;
     },
     patient() {
       if (this.selectedPatient) {
-        return this.selectedPatient.name[0].given[0] + " " + this.selectedPatient.name[0].family
+        return (
+          this.selectedPatient.name[0].family +
+          ", " +
+          this.selectedPatient.name[0].given[0] +
+          " (" +
+          this.selectedPatient.name[0].prefix[0] +
+          ")"
+        );
       } else {
-        return "No Patient Selected"
+        return "No Patient Selected";
       }
     }
   },
   async mounted() {
     let patientService = new PatientService();
-    let patientList = await patientService.getPatientList(this.token)
+    let patientList = await patientService.getPatientList(this.token);
     this.$store.commit(mutators.SET_RECENT_PATIENT, patientList);
 
     let catalogueService = new CatalogueService();
-    let recentModuleList = await catalogueService.getRecentClients(this.token)
+    let recentModuleList = await catalogueService.getRecentClients(this.token);
     this.$store.commit(mutators.SET_RECENT_MODULE, recentModuleList);
   }
 };

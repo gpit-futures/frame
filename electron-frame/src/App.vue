@@ -1,11 +1,11 @@
 <template>
   <v-app id="inspire">
     <div id="app" class="dw">
-      <div class="header-space"></div>
+      <div class="header-space blue darken-3"></div>
       <!-- sidebar component -->
       <sidebar></sidebar>
       <!-- info bar component -->
-      <info-bar id="title-bar"></info-bar>
+      <info-bar class="header-bar" id="title-bar"></info-bar>
       <div class="router-view">
         <router-view></router-view>
       </div>

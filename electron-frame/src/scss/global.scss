@@ -22,7 +22,8 @@
 }
 
 .hide-webview{ width: 0px; height: 0px; flex: 0 1!important; }
-// .header-space{ height: 5px; background-color: #2e86de}
+.header-bar{ margin-top: 5px!important; }
+.header-space{ height: 5px; }
 // .dw-patient-banner .column {
 //   padding: 0rem;
 // }
@@ -306,4 +307,17 @@ html {
 .notifications-sidebar,
 .menu-sidebar {
   z-index: 7;
+  margin-top: 69px!important;
 }
+
+.red-module { border-left: 7px solid #DA291C; }
+.yellow-module { border-left: 7px solid #FAE100; }
+.green-module { border-left: 7px solid #009639; }
+.purple-module { border-left: 7px solid #7c2855; }
+.orange-module { border-left: 7px solid #ED8B00; }
+.blue-module { border-left: 7px solid #0072CE; }
+.light-blue-module { border-left: 7px solid #60AFFF; }
+.lighter-blue-module { border-left: 7px solid #2AF5FF; }
+.pale-blue-module { border-left: 7px solid #96CDFF; }
+
+.widget-title {padding: 15px 0px}
