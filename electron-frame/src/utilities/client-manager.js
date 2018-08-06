@@ -18,7 +18,6 @@ function start() {
     // WEB SOCKETS
     wss = new WebSocket.Server({ port: 1040 })
     wss.on('connection', function (w) {
-
         w.on('message', function (data) {
             console.log(data)
             let message = JSON.parse(data);
@@ -43,7 +42,7 @@ export function setupListeners(webviews) {
     modules = webviews
     let module;
     for (module in modules) {
-        console.log(modules[module])
+        // console.log(modules[module])
         modules[module][0].addEventListener("ipc-message", event => {
             if (event.channel == 'warning-message:sent') {
                 notifier.show(
@@ -56,7 +55,7 @@ export function setupListeners(webviews) {
                 triggerPatientContextEvent(event.channel, event.args[0])
             )
         });
-        modules[module][0].reloadIgnoringCache()
+        modules[module][0].addEventListener('did-stop-loading', modules[module][0].reloadIgnoringCache())
         modules[module][0].addEventListener('did-stop-loading', triggerTokenContextEvent)
     }
     // Turn on/off devtools for each module.
@@ -71,8 +70,6 @@ export function setupListeners(webviews) {
 
 // sends patient context change event to subscribed clients
 export function triggerPatientContextEvent(eventChannel, patient) {
-    console.log(patient);
-
     if (patient) {
         patient.gp = {"name": store.state.gp};
         store.commit(mutators.ADD_RECENT_PATIENT, patient);
@@ -104,18 +101,15 @@ function getInterestedClients(event) {
 function triggerTokenContextEvent() {
     let module;
     for (module in modules) {
-        console.log(store.state.token)
         modules[module][0].send('token-context:changed', store.state.token);
     }
 }
 
 // send to thick client
 function sendToThickClient(eventChannel, patient) {
-    console.log("testing socket")
     wss.broadcast = function broadcast(data) {
         wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
-                console.log("sending to thick client")
                 client.send(data);
             }
         });

@@ -1,39 +1,53 @@
 import axios from "axios";
+import { SearchService } from "../services/search-service";
 
 export class NotificationService {
   constructor() { }
 
   private notificationList: INotifications[];
 
-  async getNotifications(token:string): Promise<INotifications[]> {
-    if (!this.notificationList) {
-      this.notificationList = await axios.get('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/notifications', 
-      {headers: {
-        "Authorization" : 'Bearer ' + token
-      }
-    })
+  async getNotifications(token: string): Promise<INotifications[]> {
+    this.notificationList = await axios.get('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/notifications',
+      {
+        headers: {
+          "Authorization": 'Bearer ' + token
+        }
+      })
       .then(response => response.data);
+
+    let searchService = new SearchService();
+    for (var i = 0; i < this.notificationList.length; i++) {
+      let tempPatient = await searchService.getPatient(token, this.notificationList[i].nhsNumber)
+      this.notificationList[i].patientName = tempPatient.name[0].family +
+        ", " +
+        tempPatient.name[0].given[0] +
+        " (" +
+        tempPatient.name[0].prefix[0] +
+        ")"
     }
-    console.log(this.notificationList);
+
     return this.notificationList;
   }
 
-  async removeNotification(token:string, id: string) {
-    await axios.post('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/notifications/'+ id +'/read', null,
-      {headers: {
-        "Authorization" : 'Bearer ' + token
-      }
-    })
+  async removeNotification(token: string, id: string) {
+    await axios.post('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/notifications/' + id + '/read', null,
+      {
+        headers: {
+          "Authorization": 'Bearer ' + token
+        }
+      })
       .then(response => response.data);
-    }
+  }
 }
 
 export interface INotifications {
   id: string;
   ods: string;
+  nhsNumber: string;
   read: string[];
   summary: string;
   details: string;
   type: string;
   dateCreated: string;
+  patientName: string;
 }

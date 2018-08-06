@@ -19,7 +19,6 @@ export default {
   components: {Dashboard},
   data() {
     return {
-      // Some mock data to fill the page
       framesTitle: "Frame"
     };
   },
@@ -38,7 +37,6 @@ export default {
     setTimeout(() => {
       let webviews = this.$refs;
       setupListeners(webviews);
-      // this.clientManager.setupListeners(webviews);
     }, 1000);
   }
 };

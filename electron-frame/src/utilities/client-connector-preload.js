@@ -7,8 +7,6 @@ init();
 
 function init() {
   attachIPCListeners();
-  console.log('webview script preloaded');
-
   // Expose a bridging API to remote app's window.
   // We'll add methods to it here first, and when the remote web app loads,
   // it'll add some additional methods as well.
@@ -22,22 +20,18 @@ function init() {
 
 function attachIPCListeners() {
   ipc.on('patient-context:changed', (event, patient) => {
-    console.log('patient context changed triggered' + patient)
     window.Bridge.updatePatientContext(patient);
   });
   ipc.on('patient-context:ended', (event, patient) => {
-    console.log('patient context ended triggered' + patient)
     window.Bridge.endPatientContext(patient);
   });
   ipc.on('token-context:changed', (event, token) => {
-    console.log('token context changed triggered' + token)
     window.Bridge.updateTokenContext(token);
   });
 }
 
 // called when the patient context changes in core
 function setPatientContext(message) {
-  console.log(message);
   if( message == null ) {
     ipc.sendToHost('patient-context:ended', message)
   } else {

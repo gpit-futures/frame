@@ -6,22 +6,26 @@ export class SearchService {
     private searchResults: IPatientResult;
     private patient: any;
 
-    async getSearchResults(token:string,searchString: string): Promise<IPatientResult> {
-        this.searchResults = await axios.post('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com/api/search/patients', { "searchString": searchString },{headers: {
-            "Authorization" : 'Bearer ' + token
-          }})
-      .then(response => response.data);
+    async getSearchResults(token: string, searchString: string): Promise<IPatientResult> {
+        this.searchResults = await axios.post('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com/api/search/patients', { "searchString": searchString }, {
+            headers: {
+                "Authorization": 'Bearer ' + token
+            }
+        })
+            .then(response => response.data);
 
-      return this.searchResults;
+        return this.searchResults;
     }
 
-    async getPatient(token:string,nhsNumber: string) {
-        this.patient = await axios.get('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com/api/search/patients/' + nhsNumber,{headers: {
-            "Authorization" : 'Bearer ' + token
-          }})
-      .then(response => response.data);
+    async getPatient(token: string, nhsNumber: string) {
+        this.patient = await axios.get('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com/api/search/patients/' + nhsNumber, {
+            headers: {
+                "Authorization": 'Bearer ' + token
+            }
+        })
+            .then(response => response.data);
 
-      return this.patient;
+        return this.patient;
     }
 }
 

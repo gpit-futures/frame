@@ -53,9 +53,9 @@ export default {
   },
   data() {
     return {
-      // Some mock data to fill the page
       hovered: null,
-      timer: null
+      timer: null,
+      catalogueService: new CatalogueService()
     };
   },
   computed: {
@@ -85,8 +85,7 @@ export default {
       );
 
       this.$store.commit(mutators.ADD_RECENT_MODULE, client);
-      let catalogueService = new CatalogueService();
-      catalogueService.updateRecentClientList(this.token, this.$store.state.recentModules)
+      this.catalogueService.updateRecentClientList(this.token, this.$store.state.recentModules)
     },
     mouseOver() {
       this.hovered = true;
@@ -107,8 +106,7 @@ export default {
       }, 1000);
     },
     async updateList() {
-      let catalogueService = new CatalogueService();
-      await catalogueService.updateClientList(this.token, this.userId, this.clients)
+      await this.catalogueService.updateClientList(this.token, this.userId, this.clients)
     }
   }
 };

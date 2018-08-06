@@ -107,7 +107,6 @@ export default {
   components: {},
   data() {
     return {
-      // Some mock data to fill the page
       headers: [
         {
           text: "Recent Patients",
@@ -121,7 +120,9 @@ export default {
         { text: "Actions", value: "actions", sortable: true }
       ],
       dialog: false,
-      selectedPatient: null
+      selectedPatient: null,
+      patientService: new PatientService(),
+      catalogueService: new CatalogueService()
     };
   },
   methods: {
@@ -138,17 +139,9 @@ export default {
     selectModule(client) {
       this.$store.commit(mutators.SET_SHOW_DASHBOARD, false);
       this.$store.commit(mutators.SET_SELECTED_MODULE, client.id);
-      this.$store.commit(
-        mutators.SET_SELECTED_MODULE_TITLE,
-        client.applicationName
-      );
-
+      this.$store.commit(mutators.SET_SELECTED_MODULE_TITLE, client.applicationName);
       this.$store.commit(mutators.ADD_RECENT_MODULE, client);
-      let catalogueService = new CatalogueService();
-      catalogueService.updateRecentClientList(
-        this.token,
-        this.$store.state.recentModules
-      );
+      this.catalogueService.updateRecentClientList(this.token, this.$store.state.recentModules);
     }
   },
   computed: {
@@ -177,12 +170,10 @@ export default {
     }
   },
   async mounted() {
-    let patientService = new PatientService();
-    let patientList = await patientService.getPatientList(this.token);
+    let patientList = await this.patientService.getPatientList(this.token);
     this.$store.commit(mutators.SET_RECENT_PATIENT, patientList);
-
-    let catalogueService = new CatalogueService();
-    let recentModuleList = await catalogueService.getRecentClients(this.token);
+    
+    let recentModuleList = await this.catalogueService.getRecentClients(this.token);
     this.$store.commit(mutators.SET_RECENT_MODULE, recentModuleList);
   }
 };

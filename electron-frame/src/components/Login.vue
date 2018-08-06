@@ -44,7 +44,7 @@ import { NotificationService } from "../services/notification-service";
 import { Notifier, NotifierType } from "../utilities/notifier";
 import mutators from "../store/mutators";
 import axios from "axios";
-import { HubConnectionBuilder } from '@aspnet/signalr'
+import { HubConnectionBuilder } from "@aspnet/signalr";
 
 export default {
   name: "login",
@@ -53,23 +53,20 @@ export default {
     return {
       // Some mock data to fill the page
       loginUsers: [],
-      test:["test","test","test"],
+      test: ["test", "test", "test"],
       password: "",
       userName: "",
       user: {},
       loadingUsers: true,
       notifier: new Notifier(),
-      connection: null
+      connection: null,
+      userService: new UserService(),
+      notificationService: new NotificationService(),
     };
   },
   methods: {
     async login() {
-      console.log(this.token);
-      this.$store.commit(
-        mutators.SET_TOKEN,
-        await this.obtainAccessToken(this.user.username, this.password)
-      );
-      console.log(this.token);
+      this.$store.commit(mutators.SET_TOKEN, await this.obtainAccessToken(this.user.username, this.password));
 
       if (this.token == null) {
         this.notifier.show(
@@ -89,36 +86,36 @@ export default {
         this.$store.commit(mutators.SET_GP, this.user.title + " " + this.user.firstName + " " + this.user.lastName);
         this.$store.commit(mutators.SET_SHOW_DRAWER, true);
         this.$router.push({ name: "Home", params: { user: this.user } });
-        // this.$router.push({ name: "Dashboard", params: { user: this.user } });
-        let notificationService = new NotificationService();
 
         // SETUP NOTIFICATIONS
-        this.$store.commit(
-          mutators.SET_NOTIFICATIONS,
-          await notificationService.getNotifications(this.token.access_token)
-        );
-        console.log(this.notifications)
+        this.$store.commit(mutators.SET_NOTIFICATIONS, await this.notificationService.getNotifications(this.token.access_token));
 
         // Toast Notifications
         // Deal with connection to signalR for notifications
         const signalR = require("@aspnet/signalr");
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl("http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/ws/notifications", {
-                accessTokenFactory: () => this.$store.state.token.access_token})
-            .build();
+          .withUrl(
+            "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/ws/notifications",
+            {
+              accessTokenFactory: () => this.$store.state.token.access_token
+            }
+          )
+          .build();
 
         this.connection.on("notification", data => {
-            console.log(data);
-            this.notifier.show(
-                data.type,
-                data.summary,
-                NotifierType.Info,
-                8000
-            );
-            this.$store.commit(mutators.ADD_NOTIFICATION, data);
+          this.triggerNotificationRefresh(data);
         });
         this.connection.start();
       }
+    },
+    async triggerNotificationRefresh(data) {
+      this.$store.commit(mutators.SET_NOTIFICATIONS, await this.notificationService.getNotifications(this.token.access_token));
+      this.notifier.show(
+        data.type + " - " + this.notifications[0].patientName,
+        data.summary,
+        NotifierType.Info,
+        8000
+      );
     },
     logout() {
       this.connection.stop();
@@ -131,7 +128,6 @@ export default {
       params.append("client_id", "fooClientIdPassword");
       params.append("client_secret", "fred");
       params.append("grant_type", "password");
-      console.log(username + " " + password);
 
       await axios
         .post(
@@ -146,7 +142,6 @@ export default {
           }
         )
         .then(res => {
-          console.log(res);
           json = res.data;
         })
         .catch(error => {
@@ -159,19 +154,18 @@ export default {
   computed: {
     token() {
       return this.$store.state.token;
+    },
+    notifications() {
+      return this.$store.state.notifications;
     }
   },
   async mounted() {
-    let userService = new UserService();
-    this.loginUsers = await userService.getUsers();
+    this.loginUsers = await this.userService.getUsers();
     this.loadingUsers = false;
-    console.log(this.loginUsers);
 
-    this.$root.$on('notifications', () => {
-      console.log('connection closed');
+    this.$root.$on("notifications", () => {
       this.logout();
-    })
-    
+    });
   }
 };
 </script>

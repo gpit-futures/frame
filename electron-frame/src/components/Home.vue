@@ -42,7 +42,8 @@ export default {
   },
   data() {
     return {
-      // Some mock data to fill the page
+      userService: new UserService(),
+      catalogueService: new CatalogueService()
     };
   },
   computed: {
@@ -69,24 +70,12 @@ export default {
   },
   methods: {},
   async mounted() {
-    let userService = new UserService();
-    this.$store.commit(
-      mutators.SET_USER,
-      await userService.getUser(this.user.id)
-    );
-    let catalogueService = new CatalogueService();
-    this.$store.commit(
-      mutators.SET_CLIENTS,
-      await catalogueService.getClients(this.user.id)
-    );
-
+    this.$store.commit(mutators.SET_USER, await this.userService.getUser(this.user.id));
+    this.$store.commit(mutators.SET_CLIENTS, await this.catalogueService.getClients(this.user.id));
     if (this.clients.length > 0) {
-      // this.clientManager.set(this.clients);
       this.clientManager = this.clients;
       this.$store.commit(mutators.SET_SELECTED_MODULE, this.clients[0].id);
-      this.$store.commit(
-        mutators.SET_SELECTED_MODULE_TITLE, "Home"
-      );
+      this.$store.commit(mutators.SET_SELECTED_MODULE_TITLE, "Home");
     }
   }
 };

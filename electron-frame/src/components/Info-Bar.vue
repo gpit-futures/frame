@@ -102,7 +102,8 @@ export default {
       search: null,
       patients: [],
       icon: "fullscreen_exit",
-      dialog: false
+      dialog: false,
+      searchService: new SearchService()
     };
   },
   methods: {
@@ -150,7 +151,6 @@ export default {
       this.$store.commit(mutators.SET_SELECTED_MODULE_TITLE, "Home");
     },
     createPatientList(patientList) {
-      console.log(patientList);
       return patientList.map(entry => {
         const Description =
           entry.title + " " + entry.firstName + " " + entry.lastName +
@@ -159,7 +159,6 @@ export default {
           " - " +
           entry.gender +
           " - " +
-          // entry.nhsNumber;
           this.nhsNumberFormat(entry.nhsNumber);
         return Object.assign({}, entry, { Description });
       });
@@ -170,11 +169,10 @@ export default {
       }
     },
     async triggerPatientContext() {
-      let searchService = new SearchService();
       if (this.selectedPatient != null) {
           triggerPatientContextEvent(
           "patient-context:changed",
-          await searchService.getPatient(this.token,this.selectedPatient.nhsNumber)
+          await this.searchService.getPatient(this.token,this.selectedPatient.nhsNumber)
         );
       } else {
         this.clearPatient();
@@ -221,7 +219,6 @@ export default {
       }
     },
     patientName() {
-      console.log(this.selectedPatient)
       if (this.selectedPatient) {
         return this.selectedPatient.lastName + ", " + this.selectedPatient.firstName +" (" + this.selectedPatient.title + ")"
       } else {
@@ -231,15 +228,13 @@ export default {
   },
   watch: {
     async search(val) {
-
       // Check if search value is nhsNumber
-      let searchService = new SearchService();
       var re = new RegExp(/\d{3}\s{1}\d{3}\s{1}\d{4}/g);
       if(re.test(val)) {
-        let searchResult = await searchService.getSearchResults(this.token,val.replace(/\s/g, ''));
+        let searchResult = await this.searchService.getSearchResults(this.token,val.replace(/\s/g, ''));
         this.patients = this.createPatientList(searchResult.patients);
       } else {
-        let searchResult = await searchService.getSearchResults(this.token,val);
+        let searchResult = await this.searchService.getSearchResults(this.token,val);
         this.patients = this.createPatientList(searchResult.patients);
       }
     }
