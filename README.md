@@ -1,9 +1,22 @@
 # frame
 ## Developers notes
-#### Front end to be completed by Dan
+#### To compile and run the framework application...
+- Ensure [Node.js](https://nodejs.org/en/) is installed and set-up on your machine
+- Clone the [frame repository](https://github.com/gpit-futures/frame.git) using git clone (or your favourite GUI tool) using the URL https://github.com/gpit-futures/frame.git to an appropriate local directory.
+- Open your chosen console (Node.js Command Prompt/Git-Bash/etc.).
+- Navigate to {downloaded location/frame/electron-frame} and run the following commands:
+- - npm install
+- - npm install electron-forge
+- - electron-forge start - (To start the application locally.)
+- - electron-forge make - (To compile an executable for your enviroment. After compilation, the executable can be found in the "/out/make directory".)
+- precompiled executables for windows/mac can be found [here](https://github.com/gpit-futures/frame/releases)
 #### Back end to be completed by Rowell
 ### Dependencies
-#### Front end to be completed by Dan
+- A working version of the [core module](https://github.com/gpit-futures/pulse) and any other modules:
+- - [inr module](https://github.com/gpit-futures/inr)
+- - [appointment module](https://github.com/gpit-futures/gpconnect-demonstrator)
+- A working [authentication server](https://github.com/gpit-futures/auth-server)
+- A working [rabbit server](https://github.com/rabbitmq/rabbitmq-server/releases)
 #### Back end to be completed by Rowell
 ### Configuration
 #### Front end to be completed by Dan
