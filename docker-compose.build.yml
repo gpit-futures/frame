@@ -1,0 +1,23 @@
+version: "3"
+services:
+  futures-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    links:
+      - futures-db
+    depends_on:
+      - futures-db
+    networks:
+      - api_network
+  futures-db:
+    image: mongo:latest
+    command: mongod --smallfiles --logpath=/dev/null --quiet
+    networks:
+      - api_network
+
+networks:
+  api_network:
+    driver: bridge

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\Futures.Application\Futures.Application.csproj" />
+    <ProjectReference Include="..\..\Core\Futures.Infrastructure\Futures.Infrastructure.csproj" />
+    <ProjectReference Include="..\Futures.Notifications.Domain\Futures.Notifications.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

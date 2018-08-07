@@ -1,0 +1,29 @@
+﻿[
+    {
+        "id": "366f6345-3407-4f6c-9c77-108a37543064",
+        "username": "john.smith1",
+        "title": "Dr",
+        "firstName": "John",
+        "lastName": "Smith",
+        "clientId": "GPC001",
+        "clientSecret": "hduieghf983"
+    },
+    {
+        "id": "d3ea21ce-87d2-1a6a-afb9-e8d820288bf2",
+        "username": "joe.blog",
+        "title": "Mr",
+        "firstName": "Joe",
+        "lastName": "Blog",
+        "clientId": "GPC002",
+        "clientSecret": "jsdfw0if9d"
+    },
+    {
+        "id": "d1ea21ce-87d2-1a2a-afb9-e8d820288bf4",
+        "username": "frank.jones",
+        "title": "Mr",
+        "firstName": "Frank",
+        "lastName": "Jones",
+        "clientId": "GPC001",
+        "clientSecret": "jsdfw0if9d"
+    }
+]

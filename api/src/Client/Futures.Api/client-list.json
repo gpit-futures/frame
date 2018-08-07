@@ -1,0 +1,149 @@
+{
+  "366f6345-3407-4f6c-9c77-108a37543064": [
+    {
+      "id": "168be560-ab86-4054-a41e-a30e51dbbab9",
+      "applicationName": "Appointments",
+      "publisher": "Core GP Sys",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com/#/",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    {
+      "id": "168be560-ab86-4020-a41e-a30e51dbbab8",
+      "applicationName": "Core",
+      "publisher": "Core GP Sys",
+      "sourceUrl": "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    {
+      "id": "34480cf8-7ada-4f81-9fd5-643b6fe269d0",
+      "applicationName": "INR",
+      "publisher": "GP Sys",
+      "sourceUrl": "http://ec2-35-177-96-55.eu-west-2.compute.amazonaws.com",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    
+    {
+      "id": "cb340a95-fb08-436c-b940-06e3de11206b",
+      "applicationName": "Document Management",
+      "publisher": "GP Sys",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    {
+      "id": "4fb0fc36-fe14-45b6-9aa6-3bd4bd0e15f0",
+      "applicationName": "Prescribing",
+      "publisher": "GP Sys",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    {
+      "id": "77695dcb-9cc5-4eed-8f99-a4b102572355",
+      "applicationName": "Workflow",
+      "publisher": "GP Sys",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    {
+      "id": "96f091f8-3b89-4402-96e2-82e7250fa939",
+      "applicationName": "Telecare",
+      "publisher": "GP Sys",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    {
+      "id": "69f0dec1-9abe-45f7-bbf8-b6c330abaf3e",
+      "applicationName": "Caseload Management",
+      "publisher": "GP Sys",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    {
+      "id": "87ab9537-4910-4d4a-9a4d-0e7ee1ab074a",
+      "applicationName": "Stock Management",
+      "publisher": "GP Sys",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    }
+  ],
+  "d1ea21ce-87d2-1a2a-afb9-e8d820288bf4": [
+    {
+      "id": "168be560-ab86-4020-a41e-a30e51dbbab8",
+      "applicationName": "Core",
+      "publisher": "Core GP Sys",
+      "sourceUrl": "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    {
+      "id": "34480cf8-7ada-4f81-9fd5-643b6fe269d0",
+      "applicationName": "INR",
+      "publisher": "GP Sys",
+      "sourceUrl": "http://ec2-35-177-96-55.eu-west-2.compute.amazonaws.com",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    {
+      "id": "168be560-ab86-4054-a41e-a30e51dbbab9",
+      "applicationName": "Appointments",
+      "publisher": "Core GP Sys",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com/#/",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    }
+  ],
+  "d3ea21ce-87d2-1a6a-afb9-e8d820288bf2": [
+    {
+      "id": "34480cf8-7ada-4f81-9fd5-643b6fe269d0",
+      "applicationName": "INR",
+      "publisher": "GP Sys",
+      "sourceUrl": "http://ec2-35-177-96-55.eu-west-2.compute.amazonaws.com",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    },
+    {
+      "id": "168be560-ab86-4054-a41e-a30e51dbbab9",
+      "applicationName": "Appointments",
+      "publisher": "Core GP Sys",
+      "sourceUrl": "http://ec2-34-246-89-210.eu-west-1.compute.amazonaws.com/#/",
+      "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
+      ]
+    }
+  ]
+}
