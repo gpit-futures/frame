@@ -43,8 +43,9 @@
               <v-list-tile-action>
                 <v-icon></v-icon>
               </v-list-tile-action>
-              <v-list-tile-content>{{notification.summary}}: {{notification.details}}
-              <span v-if="notification.type == 'Appointment'">{{notification.json | appointmentDates}}</span>
+              <v-list-tile-content><span><span class="has-text-weight-bold">Summary: </span>{{notification.summary}}</span> 
+                <span><span class="has-text-weight-bold">Details: </span>{{notification.details}}</span>
+                <span v-if="notification.type == 'Appointment'"><span class="has-text-weight-bold">Appointment Date: </span>{{notification.json | appointmentDates}}</span>
               </v-list-tile-content>
             </v-list-tile>
             
@@ -82,7 +83,6 @@ export default {
   name: "sidebar",
   data() {
     return {
-      // Some mock data to fill the page
       dialog: false,
       selectedNotification: {nhsNumber:"0000000000"},
       notificationService: new NotificationService(),
@@ -138,7 +138,7 @@ export default {
     },
     appointmentDates: function (value) {
       let json = JSON.parse(value);
-      return "Appointment Date: " + moment(json.start).format('YYYY-MM-DD, hh:mm') + " - " +   moment(json.end).format('hh:mm');
+      return `${moment(json.start).format('YYYY-MM-DD, hh:mm')} - ${moment(json.end).format('hh:mm')}`;
     }
   }
 };

@@ -35,7 +35,6 @@ export default {
   components: {},
   data() {
     return {
-      // Some mock data to fill the page
       patientBannerTitle: "patientBanner"
     };
   },
@@ -56,7 +55,6 @@ export default {
       if (months > 24) {
         result = `${today.diff(date, "years")}y`;
       } else {
-        // todo: when to show age in weeks/days?
         result = `${months}m`;
       }
 

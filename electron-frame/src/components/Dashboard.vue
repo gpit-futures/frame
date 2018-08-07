@@ -156,14 +156,9 @@ export default {
     },
     patient() {
       if (this.selectedPatient) {
-        return (
-          this.selectedPatient.name[0].family +
-          ", " +
-          this.selectedPatient.name[0].given[0] +
-          " (" +
-          this.selectedPatient.name[0].prefix[0] +
-          ")"
-        );
+        return 
+          `${this.selectedPatient.name[0].family}, ${this.selectedPatient.name[0].given[0]} (${this.selectedPatient.name[0].prefix[0]})`
+        ;
       } else {
         return "No Patient Selected";
       }

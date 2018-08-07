@@ -84,7 +84,7 @@ export default {
           3000
         );
         this.$store.commit(mutators.SET_USER, this.user);
-        this.$store.commit(mutators.SET_GP, this.user.title + " " + this.user.firstName + " " + this.user.lastName);
+        this.$store.commit(mutators.SET_GP, `${this.user.title} ${this.user.firstName} ${this.user.lastName}`);
         this.$store.commit(mutators.SET_SHOW_DRAWER, true);
         this.$router.push({ name: "Home", params: { user: this.user } });
 
@@ -96,7 +96,7 @@ export default {
         const signalR = require("@aspnet/signalr");
         this.connection = new signalR.HubConnectionBuilder()
           .withUrl(
-            this.frameworkBackendUrl + "/ws/notifications",
+            `${this.frameworkBackendUrl}/ws/notifications`,
             {
               accessTokenFactory: () => this.$store.state.token.access_token
             }
@@ -112,7 +112,7 @@ export default {
     async triggerNotificationRefresh(data) {
       this.$store.commit(mutators.SET_NOTIFICATIONS, await this.notificationService.getNotifications(this.token.access_token));
       this.notifier.show(
-        data.type + " - " + this.notifications[0].patientName,
+        `${data.type} - ${this.notifications[0].patientName}`,
         data.summary,
         NotifierType.Info,
         8000

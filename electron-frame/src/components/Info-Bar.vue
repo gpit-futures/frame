@@ -152,14 +152,7 @@ export default {
     },
     createPatientList(patientList) {
       return patientList.map(entry => {
-        const Description =
-          entry.title + " " + entry.firstName + " " + entry.lastName +
-          " - " +
-          moment.utc(entry.dateOfBirth).format('DD-MMM-YYYY') +
-          " - " +
-          entry.gender +
-          " - " +
-          this.nhsNumberFormat(entry.nhsNumber);
+        const Description = `${entry.title} ${entry.firstName} ${entry.lastName} - ${moment.utc(entry.dateOfBirth).format('DD-MMM-YYYY')} - ${entry.gender} - ${this.nhsNumberFormat(entry.nhsNumber)}`;
         return Object.assign({}, entry, { Description });
       });
     },
@@ -170,10 +163,7 @@ export default {
     },
     async triggerPatientContext() {
       if (this.selectedPatient != null) {
-          triggerPatientContextEvent(
-          "patient-context:changed",
-          await this.searchService.getPatient(this.token,this.selectedPatient.nhsNumber)
-        );
+          triggerPatientContextEvent("patient-context:changed", await this.searchService.getPatient(this.token,this.selectedPatient.nhsNumber));
       } else {
         this.clearPatient();
       }
@@ -204,23 +194,21 @@ export default {
       return this.$store.state.patientContext;
     },
     practitionerName() {
-      return (
-        this.user.title + " " + this.user.firstName + " " + this.user.lastName
-      );
+      return `${this.user.title} ${this.user.firstName} ${this.user.lastName}`;
     },
     token() {
       return this.$store.state.token.access_token
     },
     patient() {
       if (this.$store.state.patient) {
-        return this.$store.state.patient.name[0].family + ", " + this.$store.state.patient.name[0].given[0] +" (" + this.$store.state.patient.name[0].prefix[0] + ")"
+        return `${this.$store.state.patient.name[0].family}, ${this.$store.state.patient.name[0].given[0]} (${this.$store.state.patient.name[0].prefix[0]})`;
       } else {
         return "No Patient Selected"
       }
     },
     patientName() {
       if (this.selectedPatient) {
-        return this.selectedPatient.lastName + ", " + this.selectedPatient.firstName +" (" + this.selectedPatient.title + ")"
+        return `${this.selectedPatient.lastName}, ${this.selectedPatient.firstName} (${this.selectedPatient.title})`;
       } else {
         return "No Patient Selected"
       }

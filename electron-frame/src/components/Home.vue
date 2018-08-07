@@ -63,9 +63,7 @@ export default {
       return this.$store.state.clients;
     },
     practitionerName() {
-      return (
-        this.user.title + " " + this.user.firstName + " " + this.user.lastName
-      );
+      return `${this.user.title} ${this.user.firstName} ${this.user.lastName}`;
     }
   },
   methods: {},

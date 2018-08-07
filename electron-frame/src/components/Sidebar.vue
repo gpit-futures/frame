@@ -79,10 +79,7 @@ export default {
     select(client) {
       this.$store.commit(mutators.SET_SHOW_DASHBOARD, false);
       this.$store.commit(mutators.SET_SELECTED_MODULE, client.id);
-      this.$store.commit(
-        mutators.SET_SELECTED_MODULE_TITLE,
-        client.applicationName
-      );
+      this.$store.commit(mutators.SET_SELECTED_MODULE_TITLE, client.applicationName);
 
       this.$store.commit(mutators.ADD_RECENT_MODULE, client);
       this.catalogueService.updateRecentClientList(this.token, this.$store.state.recentModules)
