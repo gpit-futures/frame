@@ -4,7 +4,7 @@
 - Ensure [Node.js](https://nodejs.org/en/) is installed and set-up on your machine
 - Clone the [frame repository](https://github.com/gpit-futures/frame.git) using git clone (or your favourite GUI tool) using the URL https://github.com/gpit-futures/frame.git to an appropriate local directory.
 - Open your chosen console (Node.js Command Prompt/Git-Bash/etc.).
-- Navigate to {downloaded location/frame/electron-frame} and run the following commands:
+- Navigate to {downloaded location}/frame/electron-frame and run the following commands:
 - - npm install
 - - npm install electron-forge
 - - electron-forge start - (To start the application locally.)
