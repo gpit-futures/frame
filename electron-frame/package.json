@@ -1,7 +1,7 @@
 {
   "name": "electron-frame",
-  "productName": "electron-frame",
-  "version": "1.0.0",
+  "productName": "PcaaP-PoC-Demonstrator",
+  "version": "1.7.0",
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
@@ -32,7 +32,7 @@
         "packageManager": "npm"
       },
       "electronWinstallerConfig": {
-        "name": "electron_frame"
+        "name": "PcaaP-PoC-Demonstrator"
       },
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
@@ -42,7 +42,7 @@
       },
       "windowsStoreConfig": {
         "packageName": "",
-        "name": "electronframe"
+        "name": "PcaaP-PoC-Demonstrator"
       }
     }
   },

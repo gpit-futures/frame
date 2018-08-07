@@ -19,10 +19,7 @@ function start() {
     wss = new WebSocket.Server({ port: 1040 })
     wss.on('connection', function (w) {
         w.on('message', function (data) {
-            console.log(data)
             let message = JSON.parse(data);
-            console.log("Event: ", message.event);
-            console.log("Event: ", message.data);
             if (message.event == "patient-context:changed") {
                 triggerPatientContextEvent('patient-context:changed', message.data)
             } else {
@@ -30,7 +27,7 @@ function start() {
             }
         })
         w.on('close', function () {
-            console.log("Closed")
+            console.log("Connection Closed")
         })
         w.send("patient-context:changed - received")
     })
@@ -42,7 +39,6 @@ export function setupListeners(webviews) {
     modules = webviews
     let module;
     for (module in modules) {
-        // console.log(modules[module])
         modules[module][0].addEventListener("ipc-message", event => {
             if (event.channel == 'warning-message:sent') {
                 notifier.show(
@@ -62,10 +58,6 @@ export function setupListeners(webviews) {
     // modules.Core[0].openDevTools();
     // modules.INR[0].openDevTools();
     // modules.Appointments[0].openDevTools();
-    // modules.Appointments2[0].openDevTools();
-    // modules.Appointments3[0].openDevTools();
-    // modules.InrLocal[0].openDevTools();
-    // modules.CoreLocal[0].openDevTools();
 }
 
 // sends patient context change event to subscribed clients
