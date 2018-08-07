@@ -62,6 +62,7 @@ export default {
       connection: null,
       userService: new UserService(),
       notificationService: new NotificationService(),
+      frameworkBackendUrl : "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080"
     };
   },
   methods: {
@@ -95,7 +96,7 @@ export default {
         const signalR = require("@aspnet/signalr");
         this.connection = new signalR.HubConnectionBuilder()
           .withUrl(
-            "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/ws/notifications",
+            this.frameworkBackendUrl + "/ws/notifications",
             {
               accessTokenFactory: () => this.$store.state.token.access_token
             }

@@ -1,12 +1,15 @@
 import axios from "axios";
 
 export class UserService {
-  constructor() { }
+  constructor() {
+    this.frameworkBackendUrl = "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080"
+  }
 
   private userList: IUser[];
+  private frameworkBackendUrl : string;
 
   async getUsers(): Promise<IUser[]> {
-    this.userList = await axios.get('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/user-lists')
+    this.userList = await axios.get(`${this.frameworkBackendUrl}/api/user-lists`)
       .then(response => response.data);
     return this.userList;
   }

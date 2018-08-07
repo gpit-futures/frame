@@ -2,12 +2,15 @@ import axios from "axios";
 import { SearchService } from "../services/search-service";
 
 export class NotificationService {
-  constructor() { }
+  constructor() {
+    this.frameworkBackendUrl = "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080"
+  }
 
   private notificationList: INotifications[];
+  private frameworkBackendUrl : string;
 
   async getNotifications(token: string): Promise<INotifications[]> {
-    this.notificationList = await axios.get('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/notifications',
+    this.notificationList = await axios.get(`${this.frameworkBackendUrl}/api/notifications`,
       {
         headers: {
           "Authorization": 'Bearer ' + token
@@ -30,7 +33,7 @@ export class NotificationService {
   }
 
   async removeNotification(token: string, id: string) {
-    await axios.post('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/notifications/' + id + '/read', null,
+    await axios.post(`${this.frameworkBackendUrl}/api/notifications/${id}/read`, null,
       {
         headers: {
           "Authorization": 'Bearer ' + token

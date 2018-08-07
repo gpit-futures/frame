@@ -1,12 +1,15 @@
 import axios from "axios";
 
 export class PatientService {
-  constructor() { }
+  constructor() {
+    this.frameworkBackendUrl = "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080"
+   }
 
   private patientList: any;
+  private frameworkBackendUrl : string;
 
   async savePatientList(token: string, patientList: {}) {
-    await axios.post('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/dashboard/recent-patients', patientList,
+    await axios.post(`${this.frameworkBackendUrl}/api/dashboard/recent-patients`, patientList,
       {
         headers: {
           "Authorization": 'Bearer ' + token
@@ -16,7 +19,7 @@ export class PatientService {
   }
 
   async getPatientList(token: string) {
-    this.patientList = await axios.get('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080/api/dashboard/recent-patients',
+    this.patientList = await axios.get(`${this.frameworkBackendUrl}/api/dashboard/recent-patients`,
       {
         headers: {
           "Authorization": 'Bearer ' + token
