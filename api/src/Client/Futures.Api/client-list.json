@@ -35,48 +35,60 @@
       "id": "cb340a95-fb08-436c-b940-06e3de11206b",
       "applicationName": "Document Management",
       "publisher": "GP Sys",
-      "sourceUrl": "http://localhost",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
       "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
       ]
     },
     {
       "id": "4fb0fc36-fe14-45b6-9aa6-3bd4bd0e15f0",
       "applicationName": "Prescribing",
       "publisher": "GP Sys",
-      "sourceUrl": "http://localhost",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
       "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
       ]
     },
     {
       "id": "77695dcb-9cc5-4eed-8f99-a4b102572355",
       "applicationName": "Workflow",
       "publisher": "GP Sys",
-      "sourceUrl": "http://localhost",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
       "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
       ]
     },
     {
       "id": "96f091f8-3b89-4402-96e2-82e7250fa939",
       "applicationName": "Telecare",
       "publisher": "GP Sys",
-      "sourceUrl": "http://localhost",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
       "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
       ]
     },
     {
       "id": "69f0dec1-9abe-45f7-bbf8-b6c330abaf3e",
       "applicationName": "Caseload Management",
       "publisher": "GP Sys",
-      "sourceUrl": "http://localhost",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
       "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
       ]
     },
     {
       "id": "87ab9537-4910-4d4a-9a4d-0e7ee1ab074a",
       "applicationName": "Stock Management",
       "publisher": "GP Sys",
-      "sourceUrl": "http://localhost",
+      "sourceUrl": "http://ec2-35-176-230-224.eu-west-2.compute.amazonaws.com:8080",
       "eventsOfInterest": [
+        "patient-context:changed",
+        "patient-context:ended"
       ]
     }
   ],
