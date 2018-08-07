@@ -9,7 +9,7 @@
 - - npm install electron-forge
 - - electron-forge start - (To start the application locally.)
 - - electron-forge make - (To compile an executable for your enviroment. After compilation, the executable can be found in the "/out/make directory".)
-- precompiled executables for windows/mac can be found [here](https://github.com/gpit-futures/frame/releases)
+- Precompiled executables for windows/mac can be found [here](https://github.com/gpit-futures/frame/releases)
 #### Back end to be completed by Rowell
 ### Dependencies
 - A working version of the [core module](https://github.com/gpit-futures/pulse) and any other modules:
