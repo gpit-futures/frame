@@ -33,7 +33,7 @@
               <v-icon v-else-if="notification.type == 'Patient'">fas fa-user-plus</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title class="notification-title" @click="select(notification)">{{notification.patientName}} - {{notification.type}}</v-list-tile-title>
+              <v-list-tile-title class="notification-title" @click="select(notification)">{{notification.patientName}} - {{notification.type}} <v-icon light right>keyboard_arrow_right</v-icon></v-list-tile-title>
               <v-list-tile-sub-title>{{notification.system}}</v-list-tile-sub-title>
               <v-list-tile-sub-title>{{notification.dateCreated | readableDate}}</v-list-tile-sub-title>
             </v-list-tile-content>
@@ -46,6 +46,8 @@
               <v-list-tile-content><span><span class="has-text-weight-bold">Summary: </span>{{notification.summary}}</span> 
                 <span><span class="has-text-weight-bold">Details: </span>{{notification.details}}</span>
                 <span v-if="notification.type == 'Appointment'"><span class="has-text-weight-bold">Appointment Date: </span>{{notification.json | appointmentDates}}</span>
+                <span v-else-if="notification.type == 'Observation'"><span class="has-text-weight-bold">Observation Date: </span>{{notification.json | observationDate}}</span>
+                <span v-else><span class="has-text-weight-bold">Date Created: </span>{{notification.dateCreated | dateTimeFormat}}</span>
               </v-list-tile-content>
             </v-list-tile>
             
@@ -138,7 +140,11 @@ export default {
     },
     appointmentDates: function (value) {
       let json = JSON.parse(value);
-      return `${moment(json.start).format('YYYY-MM-DD, hh:mm')} - ${moment(json.end).format('hh:mm')}`;
+      return `${moment(json.start).format('DD-MMM-YYYY, hh:mm')} - ${moment(json.end).format('hh:mm')}`;
+    },
+    observationDate: function (value) {
+      let json = JSON.parse(value);
+      return `${moment(json.effectiveDateTime).format('DD-MMM-YYYY, hh:mm')}`;
     }
   }
 };
