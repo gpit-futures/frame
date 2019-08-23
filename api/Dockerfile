@@ -9,4 +9,5 @@ RUN dotnet publish ./src/Client/Futures.Api/Futures.Api.csproj -c Release -o ../
 FROM microsoft/dotnet:2.1-aspnetcore-runtime-alpine AS runtime
 WORKDIR /app
 COPY --from=build /app/src/out .
-ENTRYPOINT [ "dotnet", "Futures.Api.dll" ]
+COPY init.sh .
+CMD [ "/bin/ash", "init.sh" ]

@@ -8,13 +8,22 @@ services:
       - "8080:80"
     links:
       - futures-db
+      - futures-bus
     depends_on:
       - futures-db
+      - futures-bus
     networks:
       - api_network
   futures-db:
     image: mongo:latest
-    command: mongod --smallfiles --logpath=/dev/null --quiet
+    command: mongod --logpath=/dev/null --quiet
+    networks:
+      - api_network
+  futures-bus:
+    image: rabbitmq:management-alpine
+    ports:
+      - "15672:15672"
+      - "5672:5672"
     networks:
       - api_network
 
