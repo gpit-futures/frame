@@ -14,7 +14,7 @@
       "id": "168be560-ab86-4020-a41e-a30e51dbbab8",
       "applicationName": "Core",
       "publisher": "Core GP Sys",
-      "sourceUrl": "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com",
+      "sourceUrl": "http://localhost:8080",
       "eventsOfInterest": [
         "patient-context:changed",
         "patient-context:ended"
@@ -24,7 +24,7 @@
       "id": "34480cf8-7ada-4f81-9fd5-643b6fe269d0",
       "applicationName": "INR",
       "publisher": "GP Sys",
-      "sourceUrl": "http://ec2-35-177-96-55.eu-west-2.compute.amazonaws.com",
+      "sourceUrl": "http://localhost:8083",
       "eventsOfInterest": [
         "patient-context:changed",
         "patient-context:ended"
@@ -97,7 +97,7 @@
       "id": "168be560-ab86-4020-a41e-a30e51dbbab8",
       "applicationName": "Core",
       "publisher": "Core GP Sys",
-      "sourceUrl": "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com",
+      "sourceUrl": "http://localhost:8080",
       "eventsOfInterest": [
         "patient-context:changed",
         "patient-context:ended"
@@ -107,7 +107,7 @@
       "id": "34480cf8-7ada-4f81-9fd5-643b6fe269d0",
       "applicationName": "INR",
       "publisher": "GP Sys",
-      "sourceUrl": "http://ec2-35-177-96-55.eu-west-2.compute.amazonaws.com",
+      "sourceUrl": "http://localhost:8083",
       "eventsOfInterest": [
         "patient-context:changed",
         "patient-context:ended"
@@ -129,7 +129,7 @@
       "id": "34480cf8-7ada-4f81-9fd5-643b6fe269d0",
       "applicationName": "INR",
       "publisher": "GP Sys",
-      "sourceUrl": "http://ec2-35-177-96-55.eu-west-2.compute.amazonaws.com",
+      "sourceUrl": "http://localhost:8083",
       "eventsOfInterest": [
         "patient-context:changed",
         "patient-context:ended"

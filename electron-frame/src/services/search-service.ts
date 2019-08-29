@@ -7,7 +7,7 @@ export class SearchService {
     private patient: any;
 
     async getSearchResults(token: string, searchString: string): Promise<IPatientResult> {
-        this.searchResults = await axios.post('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com/api/search/patients', { "searchString": searchString }, {
+        this.searchResults = await axios.post('http://localhost/api/search/patients', { "searchString": searchString }, {
             headers: {
                 "Authorization": 'Bearer ' + token
             }
@@ -18,7 +18,7 @@ export class SearchService {
     }
 
     async getPatient(token: string, nhsNumber: string) {
-        this.patient = await axios.get('http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com/api/search/patients/' + nhsNumber, {
+        this.patient = await axios.get('http://localhost/api/search/patients/' + nhsNumber, {
             headers: {
                 "Authorization": 'Bearer ' + token
             }

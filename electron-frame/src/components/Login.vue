@@ -62,7 +62,7 @@ export default {
       connection: null,
       userService: new UserService(),
       notificationService: new NotificationService(),
-      frameworkBackendUrl : "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080"
+      frameworkBackendUrl : "localhost:8080"
     };
   },
   methods: {
@@ -132,7 +132,7 @@ export default {
 
       await axios
         .post(
-          "http://ec2-18-130-14-227.eu-west-2.compute.amazonaws.com/oauth/token",
+          "http://localhost/oauth/token",
           params,
           {
             headers: {

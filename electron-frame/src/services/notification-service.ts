@@ -3,7 +3,7 @@ import { SearchService } from "../services/search-service";
 
 export class NotificationService {
   constructor() {
-    this.frameworkBackendUrl = "http://ec2-18-130-26-44.eu-west-2.compute.amazonaws.com:8080"
+    this.frameworkBackendUrl = "http://localhost:8080"
   }
 
   private notificationList: INotifications[];

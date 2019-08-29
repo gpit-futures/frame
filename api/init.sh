@@ -1,2 +1,2 @@
 #!/bin/ash
-sleep 5 && dotnet Futures.Api.dll
+sleep 10 && dotnet Futures.Api.dll
