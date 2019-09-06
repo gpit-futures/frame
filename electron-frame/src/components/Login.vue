@@ -62,7 +62,7 @@ export default {
       connection: null,
       userService: new UserService(),
       notificationService: new NotificationService(),
-      frameworkBackendUrl : "localhost:8080"
+      frameworkBackendUrl : "http://localhost:8080"
     };
   },
   methods: {

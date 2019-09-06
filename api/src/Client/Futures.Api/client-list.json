@@ -14,7 +14,7 @@
       "id": "168be560-ab86-4020-a41e-a30e51dbbab8",
       "applicationName": "Core",
       "publisher": "Core GP Sys",
-      "sourceUrl": "http://localhost:8080",
+      "sourceUrl": "http://localhost:3101",
       "eventsOfInterest": [
         "patient-context:changed",
         "patient-context:ended"
@@ -97,7 +97,7 @@
       "id": "168be560-ab86-4020-a41e-a30e51dbbab8",
       "applicationName": "Core",
       "publisher": "Core GP Sys",
-      "sourceUrl": "http://localhost:8080",
+      "sourceUrl": "http://localhost:3101",
       "eventsOfInterest": [
         "patient-context:changed",
         "patient-context:ended"

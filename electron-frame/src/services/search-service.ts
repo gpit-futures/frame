@@ -5,9 +5,9 @@ export class SearchService {
 
     private searchResults: IPatientResult;
     private patient: any;
-
+    // Changes for single machine: Patient search hits the Core module, so redirect to that backend port.  Note on AWS instances, Core ran on same server as Frame but on port 80
     async getSearchResults(token: string, searchString: string): Promise<IPatientResult> {
-        this.searchResults = await axios.post('http://localhost/api/search/patients', { "searchString": searchString }, {
+        this.searchResults = await axios.post('http://localhost:3101/api/search/patients', { "searchString": searchString }, {
             headers: {
                 "Authorization": 'Bearer ' + token
             }
@@ -18,7 +18,7 @@ export class SearchService {
     }
 
     async getPatient(token: string, nhsNumber: string) {
-        this.patient = await axios.get('http://localhost/api/search/patients/' + nhsNumber, {
+        this.patient = await axios.get('http://localhost:3101/api/search/patients/' + nhsNumber, {
             headers: {
                 "Authorization": 'Bearer ' + token
             }
