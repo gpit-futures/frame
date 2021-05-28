@@ -62,7 +62,7 @@
     "vueify-insert-css": "^1.0.0",
     "vuetify": "^1.0.19",
     "vuex": "^3.0.1",
-    "ws": "^5.2.1"
+    "ws": "^7.4.5"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
